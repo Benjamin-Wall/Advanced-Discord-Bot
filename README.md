@@ -45,10 +45,13 @@ kick [@NAME] - To kick the mentioned user from the server.
 * maybe a overwatch stats checker
 * maybe a CSGO float checker
 * make a local prefix so it can be used on multiple servers
+* make YouTube playlists supported
 
 ## Getting Started
 
 * You will need [FFmpeg](https://www.ffmpeg.org/) for the play, stop and skip commands, because the ytdl-core package needs ffmpeg or it will not work.
+* Make a folder and git clone this repository: https://github.com/MrWall112/Advanced-Dicsord-Bot.git
+* Then type "npm install" to get the needed packages for the bot
 
 ## Built With:
 
