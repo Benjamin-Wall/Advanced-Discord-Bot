@@ -49,7 +49,6 @@ kick [@NAME] - To kick the mentioned user from the server.
 
 * add more commands
 * add more functionality
-* maybe a overwatch stats checker
 * make a local prefix so it can be used on multiple servers
 * make YouTube playlists supported
 
