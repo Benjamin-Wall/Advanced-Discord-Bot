@@ -5,7 +5,7 @@ a discord.js bot, I made this so new users can also look at the methods used for
 
 ## Commands
 
-NOTE: ignore the [] that just shows what should be there when entering the command
+NOTE: ignore the [ ] that just shows what should be there when entering the command
 
 ```
 speak [ANYTIHNG] - This will Make it look like the bot said whatever is put inside the []
@@ -26,7 +26,7 @@ memes - This gets a random meme from reddit, but there is alot of duplicates
 
 ## Admin Commands:
 
-NOTE: ignore the [] that just shows what should be there when entering the command
+NOTE: ignore the [ ] that just shows what should be there when entering the command
 
 ```
 dev - This is just a simple reply to the user
