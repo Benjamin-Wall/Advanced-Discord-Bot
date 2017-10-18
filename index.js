@@ -645,6 +645,7 @@ bot.on("message", function(message){
                                                        "Type " + "__**" + settingsreal.prefix + "userinfo**__ to show your profile info \n" +
                                                        "Type " + "__**" + settingsreal.prefix + "images [SEARCH TERM]**__ to get a random image from google\n" +
                                                        "Type " + "__**" + settingsreal.prefix + "memes**__ to get a random meme from reddit\n" +
+                                                       "Type " + "__**" + settingsreal.prefix + "float [INSPECT URL]**__ to get the float of the given inspect link\n" +
                                                        "----------------------------------------------------------------------------------------------\n", true)
 
                           .setColor("0x00FF00")
