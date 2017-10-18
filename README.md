@@ -3,6 +3,12 @@
 From kicking and banning people to giving roles for specific amounts of time, this Discord bot can be helpful for anyone who wants to learn how to make
 a discord.js bot, I made this so new users can also look at the methods used for certain commands and get some ideas for their Discord bot.
 
+## Getting Started
+
+* You will need [FFmpeg](https://www.ffmpeg.org/) for the play, stop and skip commands, because the ytdl-core package needs ffmpeg or it will not work.
+* Make a folder and git clone this repository: https://github.com/MrWall112/Advanced-Dicsord-Bot.git
+* Then type "npm install" to get the needed packages for the bot
+
 ## Commands
 
 NOTE: ignore the [ ] that just shows what should be there when entering the command
@@ -22,6 +28,7 @@ stop - This stops the currently playing song and disconnects the bot from the ch
 userinfo - This shows whoever typed the command there profile info
 images [SEARCH TERM] - This gets a random image everyime based upon the search results
 memes - This gets a random meme from reddit, but there is alot of duplicates
+float [INSPECT URL] - This gets the float for the given inspect link
 ```
 
 ## Admin Commands:
@@ -46,12 +53,6 @@ kick [@NAME] - To kick the mentioned user from the server.
 * maybe a CSGO float checker
 * make a local prefix so it can be used on multiple servers
 * make YouTube playlists supported
-
-## Getting Started
-
-* You will need [FFmpeg](https://www.ffmpeg.org/) for the play, stop and skip commands, because the ytdl-core package needs ffmpeg or it will not work.
-* Make a folder and git clone this repository: https://github.com/MrWall112/Advanced-Dicsord-Bot.git
-* Then type "npm install" to get the needed packages for the bot
 
 ## Built With:
 
