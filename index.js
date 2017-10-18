@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const ms = require('ms');
+var getJSON = require('get-json');
 var YTDL = require('ytdl-core');
 const chalk = require('chalk');
 var colors = require('colors');
@@ -11,8 +12,6 @@ var shuffle = require('shuffle-array');
 var memes = require('dankmemes');
 const GoogleImages = require('google-images');
 
-//james BB <3
-//ben BB <3
 const configS = require('./ConfigSammy.json');
 const configJ = require('./ConfigJack.json');
 const configB = require('./ConfigBen.json');
@@ -245,6 +244,31 @@ bot.on("message", function(message){
 
           break;
 
+    case "float":
+      message.delete().then(() =>{
+        if(!args[1]){
+          return message.channel.send("Please enter an inspect link for your awesome skin/weapon");
+        }else{
+          getJSON("https://api.csgofloat.com:1738/?url=" + args[1], function(error, data){
+
+            if(data == undefined){
+              return message.channel.send("Please enter a valid inspect link for your awesome skin/weapon");
+            }
+
+            var float = new Discord.RichEmbed()
+            .addField("Weapon Name: ", data.iteminfo.weapon_type, true)
+            .addField("Weapon Skin Name: ", data.iteminfo.item_name, false)
+            .addField("Float Value: ", data.iteminfo.floatvalue, true)
+            .addField("Requested By: ", message.author.username)
+            .setThumbnail(data.iteminfo.imageurl)
+
+            .setColor("0x#FF0000")
+            message.channel.send(float);
+          })
+        }
+      })
+
+      break;
     case "invite":
           console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "invite");
           var invite = new Discord.RichEmbed()
