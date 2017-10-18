@@ -22,14 +22,10 @@ var SammyCode = SteamTotp.getAuthCode(configS.sharedSecret);
 
 var settings = './settings.json';
 var file = require(settings)
-var test = fs.readFileSync("settings.json")
-var settingsreal = JSON.parse(test)
 
 require('console-stamp')(console, '[HH:MM:ss]');
 
-let global = {};
-
-const TOKEN = settingsreal.TOKEN;
+const TOKEN = file.TOKEN;
 const GreenStyle = chalk.green;
 
 var EmbedColors = [
@@ -145,12 +141,11 @@ var bot = new Discord.Client();
 var servers = {};
 
 bot.on("guildMemberAdd", function(member) {
-  member.guild.channels.find("name", "general-chat-channel").send(member.toString() + " Welcome To The Comp Crew Official Server");
+  member.guild.channels.find("name", "general").send(member.toString() + " Welcome To The Comp Crew Official Server");
 
   member.addRole(member.guild.roles.find("name", "Members")).then(() => {
     console.log(`${message.author.username}` + " joined and has been given The Member Role");
   })
-
 });
 
 bot.on("ready", function(){
@@ -161,28 +156,27 @@ bot.on("ready", function(){
   console.log(GreenStyle("Logging Woll Now Start...               "));
   console.log(GreenStyle("----------------------------------------"));
 
-  bot.user.setGame("PREFIX: " + settingsreal.prefix);
 });
 
 bot.on("message", function(message){
     if (message.author.equals(bot.user)) return;
 
-    if (!message.content.startsWith(settingsreal.prefix)) return;
+    var prefix = (file.prefix[message.guild.id] == undefined) ? file.prefix["default"] : file.prefix[message.guild.id];
 
-    var args = message.content.substring(settingsreal.prefix.length).split(" ");
-    var RoleAdmin = message.guild.roles.find("name", "ADMIN");
-    var RoleModerator = message.guild.roles.find("name", "Moderators");
-    var RoleMembers= message.guild.roles.find("name", "Members");
+    //console.log(prefix);
+    if (!message.content.startsWith(prefix)) return;
+
+    var args = message.content.substring(prefix.length).split(" ");
 
     switch (args[0].toLowerCase()) {
 
       case "ping":
-            console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "ping");
+            console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "ping");
           message.channel.send(message.author.toString() + " " + "Pong!");
           break;
 
       case "memes":
-            console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "memes");
+            console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "memes");
             memes('all', 100, function(err, data) {
 
               var rand = Math.floor(Math.random() * 100);
@@ -194,7 +188,7 @@ bot.on("message", function(message){
           break;
 
       case "images":
-        const client = new GoogleImages(settingsreal.CSE, settingsreal.API);
+        const client = new GoogleImages(file.CSE, file.API);
           var search = client.search(args.slice(1).join(" ")).then(function(images) {
             message.channel.send(images[Math.floor(Math.random() * images.length)].url);
             });
@@ -204,7 +198,7 @@ bot.on("message", function(message){
       case "codes":
       message.delete();
       if (message.author.id === "103509994074312704") {
-        console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "codes");
+        console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "codes");
 
         function myFunc(){
             var JackCode = SteamTotp.getAuthCode(configJ.sharedSecret);
@@ -224,13 +218,13 @@ bot.on("message", function(message){
       } else {
 
         return message.reply("Your need to be ben to access this command!").then(() => {
-          console.log(`${message.author.username}` + " " + "Was Denied, trying to use the command " + settingsreal.prefix + "codes");
+          console.log(`${message.author.username}` + " " + "Was Denied, trying to use the command " + prefix + "codes");
         });
       }
       break;
 
       case "userinfo":
-          console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "userinfo");
+          console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "userinfo");
           var userinf = new Discord.RichEmbed()
               .setAuthor(message.author.username)
               .setThumbnail(message.author.avatarURL)
@@ -270,10 +264,12 @@ bot.on("message", function(message){
 
       break;
     case "invite":
-          console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "invite");
+          console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "invite");
           var invite = new Discord.RichEmbed()
 
-                  .setDescription("INVITE LINK: https://discord.gg/TyM8AkG")
+                  .addField("__**" + "INVITE LINK: " + "**__", "https://discord.gg/TyM8AkG", true)
+                  .addField("__**" + "Bot Invite Link: " + "**__", "https://discordapp.com/oauth2/authorize?client_id=353154808078794752&scope=bot&permissions=2146958591", false)
+
 
                   .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
 
@@ -281,21 +277,21 @@ bot.on("message", function(message){
         break;
 
       case "prefix":
-          if(message.member.roles.has(RoleAdmin.id)) {
-            console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "prefix");
-            file.prefix = args[1];
+          if(message.member.hasPermission("ADMINISTRATOR")) {
+            console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "prefix");
+            var prefix_val = args[1];
+            file.prefix[message.guild.id] = prefix_val;
 
             fs.writeFile(settings, JSON.stringify(file, null, 2), function (err) {
-              var test = fs.readFileSync("settings.json")
-              settingsreal = JSON.parse(test)
+              //var test = fs.readFileSync("settings.json")
+              //settingsreal = JSON.parse(test)
 
-              message.channel.send(message.author.toString() + " " + "The NEW Prefix for this bot is: " + settingsreal.prefix);
-              bot.user.setGame("PREFIX: " + settingsreal.prefix);
+              message.channel.send(message.author.toString() + " " + "The NEW Prefix for this bot is: " + prefix_val);
             });
-            
+
           } else {
-            return message.reply("Your need to have the \"ADMIN\" Role!").then(() => {
-              console.log(`${message.author.username}` + " " + "Was Denied, trying to use the command " + settingsreal.prefix + "prefix");
+            return message.reply("Your need to have the \"ADMINISTRATOR\" Permission").then(() => {
+              console.log(`${message.author.username}` + " " + "Was Denied, trying to use the command " + prefix + "prefix");
             });
           }
           break;
@@ -312,8 +308,8 @@ bot.on("message", function(message){
           break;
 
       // case "mute":
-      // if(message.member.roles.has(RoleAdmin.id)) {
-      //   console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "mute");
+      // if(message.member.hasPermission("ADMINISTRATOR")) {
+      //   console.log(`${message.author.username}` + " " + "Used The Command " + file.prefix[message.guild.id] + "mute");
       //   let member = message.mentions.members.first();
       //   if(!member) return message.reply("You need to mention a user/member!");
       //   let muteRole = message.guild.roles.find("name", "Muted");
@@ -331,14 +327,14 @@ bot.on("message", function(message){
       //   }, ms(time));
       //
       //   }else {
-      //     console.log(`${message.author.username}` + " " + "Was Denied Use of the command " + settingsreal.prefix + "mute");
-      //     return message.reply("Your need to have the \"ADMIN\" Role!")
+      //     console.log(`${message.author.username}` + " " + "Was Denied Use of the command " + file.prefix[message.guild.id] + "mute");
+      //     return message.reply("Your need to have the \"ADMINISTRATOR\" Permission")
       //   };
       //   break;
 
         case "addrole":
-        if(message.member.roles.has(RoleAdmin.id)) {
-          console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "addrole");
+        if(message.member.hasPermission("ADMINISTRATOR")) {
+          console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "addrole");
           let member2 = message.mentions.members.first();
           if(!member2) return message.reply("You need to mention a user/member!");
           let muteRole2 = message.guild.roles.find("name", args[2]);
@@ -359,14 +355,14 @@ bot.on("message", function(message){
 
             };
             }else {
-              console.log(`${message.author.username}` + " " + "Was Denied Use of the command " + settingsreal.prefix + "addrole");
-              return message.reply("Your need to have the \"ADMIN\" Role!")
+              console.log(`${message.author.username}` + " " + "Was Denied Use of the command " + prefix + "addrole");
+              return message.reply("Your need to have the \"ADMINISTRATOR\" Permission")
             };
           break;
 
           case "removerole":
-          if(message.member.roles.has(RoleAdmin.id)) {
-            console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "removerole");
+          if(message.member.hasPermission("ADMINISTRATOR")) {
+            console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "removerole");
             let member3 = message.mentions.members.first();
             if(!member3) return message.reply("You need to mention a user/member!");
             let muteRole3 = message.guild.roles.find("name", args[2]);
@@ -376,45 +372,45 @@ bot.on("message", function(message){
             message.channel.send(member3 + ` you have lost the role: ` + args[2] + `!`);
 
             }else {
-              console.log(`${message.author.username}` + " " + "Was Denied Use of the command " + settingsreal.prefix + "removerole");
-              return message.reply("Your need to have the \"ADMIN\" Role!")
+              console.log(`${message.author.username}` + " " + "Was Denied Use of the command " + prefix + "removerole");
+              return message.reply("Your need to have the \"ADMINISTRATOR\" Permission")
             };
             break;
       case "dev":
-        if(message.member.roles.has(RoleAdmin.id)) {
-          console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "dev");
+        if(message.member.hasPermission("ADMINISTRATOR")) {
+          console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "dev");
           message.channel.send("this is working Mr Developer!");
         } else {
-          console.log(`${message.author.username}` + " " + "Was Denied Use of the command " + settingsreal.prefix + "dev");
-          return message.reply("Your need to have the \"ADMIN\" Role!")
+          console.log(`${message.author.username}` + " " + "Was Denied Use of the command " + prefix + "dev");
+          return message.reply("Your need to have the \"ADMINISTRATOR\" Permission")
         }
 
           break;
 
       case "rename":
-        if(message.member.roles.has(RoleAdmin.id)) {
-          console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "rename");
+        if(message.member.hasPermission("ADMINISTRATOR")) {
+          console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "rename");
           message.guild.member(bot.user).setNickname(message.content.substring(8)).then(user => message.channel.send("My New NickName is " + message.content.substring(8) + "!")).catch(console.error);
         } else {
-          console.log(`${message.author.username}` + " " + "Was Denied Use of the command " + settingsreal.prefix + "rename");
-          return message.reply("Your need to have the \"ADMIN\" Role!")
+          console.log(`${message.author.username}` + " " + "Was Denied Use of the command " + prefix + "rename");
+          return message.reply("Your need to have the \"ADMINISTRATOR\" Permission")
         }
 
           break;
 
       case "coin":
-          console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "coin");
+          console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "coin");
           message.channel.send(message.author.toString() + " You Flipped: " + (hd[Math.floor(Math.random() * hd.length)]));
           break;
       case "8ball":
 
-          console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "8ball");
+          console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "8ball");
           if (args[1]) message.channel.send(fortunes[Math.floor(Math.random() * fortunes.length)]);
           else message.channel.send("I Wasnt Able To Read That :(");
           break;
 
       case "embed":
-          console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "embed");
+          console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "embed");
           var embed = new Discord.RichEmbed()
               .addField("Test Title 1", "Test Description 1", true)
               .addField("Test Title 2", "Test Description 2", true)
@@ -426,12 +422,12 @@ bot.on("message", function(message){
           break;
 
       case "notice":
-          console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "notice");
+          console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "notice");
           message.channel.send(message.author.toString() + " I Have Noticed You, Feel Proud!");
           break;
 
       case "kick":
-          if(!message.member.roles.has(RoleAdmin.id)){
+          if(!message.member.hasPermission("ADMINISTRATOR")){
             return message.reply("You Need The \"ADMIN\" role to kick people").catch(console.error);
           }
           if (message.mentions.users.size === 0){
@@ -451,18 +447,18 @@ bot.on("message", function(message){
 
       case "highlight":
         message.delete();
-        console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "highlight");
+        console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "highlight");
         message.channel.send("```" + args.slice(1).join(" ") + "```");
         break;
 
       case "speak":
           message.delete();
-          console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "speak");
+          console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "speak");
           message.channel.send(args.slice(1).join(" "));
         break;
 
       case "play":
-          console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "play");
+          console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "play");
           if (!args[1]){
               message.channel.send("Please Provide A Link (YouTube link)");
               return;
@@ -522,7 +518,7 @@ bot.on("message", function(message){
           break;
 
       case "skip":
-          console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "skip");
+          console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "skip");
           var server = servers[message.guild.id];
           var url = server.queue[0];
 
@@ -551,7 +547,7 @@ bot.on("message", function(message){
           break;
 
       case "stop":
-          console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "stop");
+          console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "stop");
           var server = servers[message.guild.id];
 
           if (message.guild.voiceConnection)
@@ -566,7 +562,7 @@ bot.on("message", function(message){
           break;
 
        case "crosshair":
-       console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "crosshair");
+       console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "crosshair");
        message.delete().then(() => {
 
          message.channel.send(cross)
@@ -589,7 +585,7 @@ bot.on("message", function(message){
           break;
 
       case "test":
-      console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "test");
+      console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "test");
 
       var test = new Discord.RichEmbed()
               .addField("MEMBER:", "ping\n" +
@@ -611,7 +607,7 @@ bot.on("message", function(message){
                                    "kick\n", true)
 
               .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
-              .setFooter("FOR MORE INFO TYPE " + settingsreal.prefix + "help [COMMAND] FOR MORE INFO ON THE COMMAND")
+              .setFooter("FOR MORE INFO TYPE " + prefix + "help [COMMAND] FOR MORE INFO ON THE COMMAND")
 
                 message.channel.send(test)
 
@@ -619,47 +615,47 @@ bot.on("message", function(message){
           break;
 
       case "commands":
-          console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "commands");
+          console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "commands");
 
           var comm1 = new Discord.RichEmbed()
                   .addField("Commands (1/3):", "----------------------------------------------------------------------------------------------\n" +
-                                               "Type " + "__**" + settingsreal.prefix + "speak [ANYTHING]**__ to show text entered as the bot\n" +
-                                               "Type " + "__**" + settingsreal.prefix + "coin**__ to flip a coin to get heads or tails \n" +
-                                               "Type " + "__**" + settingsreal.prefix + "8ball [QUESTION]**__ to get a random answer \n" +
-                                               "Type " + "__**" + settingsreal.prefix + "embed**__ to show a test version of a embed \n" +
-                                               "Type " + "__**" + settingsreal.prefix + "highlight [ANYTHING]**__ to show text entered with black background \n" +
-                                               "Type " + "__**" + settingsreal.prefix + "timer [1s/1m/1h]**__ to start a timer with the given amount of time \n" +
-                                               "Type " + "__**" + settingsreal.prefix + "invite**__ to get the perminent invite link for the server\n" +
-                                               "Type " + "__**" + settingsreal.prefix + "notice**__ to get noticed by the bot \n" +
-                                               "Type " + "__**" + settingsreal.prefix + "play [YOUTUBE URL]**__ to play a song from YouTube \n" +
+                                               "Type " + "__**" + prefix + "speak [ANYTHING]**__ to show text entered as the bot\n" +
+                                               "Type " + "__**" + prefix + "coin**__ to flip a coin to get heads or tails \n" +
+                                               "Type " + "__**" + prefix + "8ball [QUESTION]**__ to get a random answer \n" +
+                                               "Type " + "__**" + prefix + "embed**__ to show a test version of a embed \n" +
+                                               "Type " + "__**" + prefix + "highlight [ANYTHING]**__ to show text entered with black background \n" +
+                                               "Type " + "__**" + prefix + "timer [1s/1m/1h]**__ to start a timer with the given amount of time \n" +
+                                               "Type " + "__**" + prefix + "invite**__ to get the perminent invite link for the server\n" +
+                                               "Type " + "__**" + prefix + "notice**__ to get noticed by the bot \n" +
+                                               "Type " + "__**" + prefix + "play [YOUTUBE URL]**__ to play a song from YouTube \n" +
                                                "----------------------------------------------------------------------------------------------\n", true)
 
                   .setColor("0x00FF00")
 
                   var comm2 = new Discord.RichEmbed()
                           .addField("Commands (2/3):", "----------------------------------------------------------------------------------------------\n" +
-                                                       "Type " + "__**" + settingsreal.prefix + "skip**__ to play the next song in the queue \n" +
-                                                       "Type " + "__**" + settingsreal.prefix + "stop**__ to stop the currently playing song \n" +
-                                                       "Type " + "__**" + settingsreal.prefix + "crosshair**__ to get the Developers CS:GO Crosshair\n" +
-                                                       "Type " + "__**" + settingsreal.prefix + "*viewmodel**__ to get the Developers CS:GO Viewmodel\n" +
-                                                       "Type " + "__**" + settingsreal.prefix + "invite**__ to get the perminent invite link for the server\n" +
-                                                       "Type " + "__**" + settingsreal.prefix + "userinfo**__ to show your profile info \n" +
-                                                       "Type " + "__**" + settingsreal.prefix + "images [SEARCH TERM]**__ to get a random image from google\n" +
-                                                       "Type " + "__**" + settingsreal.prefix + "memes**__ to get a random meme from reddit\n" +
-                                                       "Type " + "__**" + settingsreal.prefix + "float [INSPECT URL]**__ to get the float of the given inspect link\n" +
+                                                       "Type " + "__**" + prefix + "skip**__ to play the next song in the queue \n" +
+                                                       "Type " + "__**" + prefix + "stop**__ to stop the currently playing song \n" +
+                                                       "Type " + "__**" + prefix + "crosshair**__ to get the Developers CS:GO Crosshair\n" +
+                                                       "Type " + "__**" + prefix + "*viewmodel**__ to get the Developers CS:GO Viewmodel\n" +
+                                                       "Type " + "__**" + prefix + "invite**__ to get the perminent invite link for the server\n" +
+                                                       "Type " + "__**" + prefix + "userinfo**__ to show your profile info \n" +
+                                                       "Type " + "__**" + prefix + "images [SEARCH TERM]**__ to get a random image from google\n" +
+                                                       "Type " + "__**" + prefix + "memes**__ to get a random meme from reddit\n" +
+                                                       "Type " + "__**" + prefix + "float [INSPECT URL]**__ to get the float of the given inspect link\n" +
                                                        "----------------------------------------------------------------------------------------------\n", true)
 
                           .setColor("0x00FF00")
 
           var comm3 = new Discord.RichEmbed()
                   .addField("Admin Commands (3/3):", "----------------------------------------------------------------------------------------------\n" +
-                                                     "Type " + "__**" +  settingsreal.prefix + "dev**__ to get test if the bots working \n" +
-                                                     "Type " + "__**" +  settingsreal.prefix + "prefix [NEW PREFIX]**__ to change old prefix \n" +
-                                                     "Type " + "__**" +  settingsreal.prefix + "rename [NAME]**__ to rename to bot \n" +
-                                                     "Type " + "__**" +  settingsreal.prefix + "clear [NUMBER]**__ to delete a certain number of messages \n" +
-                                                     "Type " + "__**" +  settingsreal.prefix + "addrole [MENTION] [ROLE] [LENGTH]**__ to add a role to the mentioned \n" +
-                                                     "Type " + "__**" +  settingsreal.prefix + "removerole [MENTION] [ROLE]**__ to remove the person mentioned role\n" +
-                                                     "Type " + "__**" +  settingsreal.prefix + "kick [@NAME]**__ to kick the mentioned user \n" +
+                                                     "Type " + "__**" +  prefix + "dev**__ to get test if the bots working \n" +
+                                                     "Type " + "__**" +  prefix + "prefix [NEW PREFIX]**__ to change old prefix \n" +
+                                                     "Type " + "__**" +  prefix + "rename [NAME]**__ to rename to bot \n" +
+                                                     "Type " + "__**" +  prefix + "clear [NUMBER]**__ to delete a certain number of messages \n" +
+                                                     "Type " + "__**" +  prefix + "addrole [MENTION] [ROLE] [LENGTH]**__ to add a role to the mentioned \n" +
+                                                     "Type " + "__**" +  prefix + "removerole [MENTION] [ROLE]**__ to remove the person mentioned role\n" +
+                                                     "Type " + "__**" +  prefix + "kick [@NAME]**__ to kick the mentioned user \n" +
                                                      "----------------------------------------------------------------------------------------------\n", true)
 
 
@@ -679,8 +675,8 @@ bot.on("message", function(message){
 
           break;
       case "clear":
-        if(message.member.roles.has(RoleAdmin.id)) {
-          console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "clear");
+        if(message.member.hasPermission("ADMINISTRATOR")) {
+          console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "clear");
           let messagecount = parseInt(args[1]);
           if(messagecount > 100){
             message.channel.send("Sorry, You can only clean upto 100 messages at a time!")
@@ -692,14 +688,14 @@ bot.on("message", function(message){
             message.channel.fetchMessages({limit: messagecount}).then(messages => message.channel.bulkDelete(messages));
           }
         } else {
-          console.log(`${message.author.username}` + " " + "Was Denied Use of the command " + settingsreal.prefix + "clean");
-          return message.reply("Your need to have the \"ADMIN\" Role!")
+          console.log(`${message.author.username}` + " " + "Was Denied Use of the command " + prefix + "clean");
+          return message.reply("Your need to have the \"ADMINISTRATOR\" Permission")
         }
 
           break;
 
       case "rules":
-          console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "rules");
+          console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "rules");
 
             message.channel.send(rules1)
             message.channel.send(rules2)
@@ -713,7 +709,7 @@ bot.on("message", function(message){
           break;
 
       case "roles":
-          console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "roles");
+          console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "roles");
           message.delete().then(() => {
 
             message.channel.send(role)
@@ -728,7 +724,7 @@ bot.on("message", function(message){
           break;
 
       case "viewmodel":
-      console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "viewmodel");
+      console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "viewmodel");
       message.delete().then(() => {
 
         message.channel.send(view)
@@ -751,13 +747,13 @@ bot.on("message", function(message){
           break;
 
       case "help":
-      console.log(`${message.author.username}` + " " + "Used The Command " + settingsreal.prefix + "help");
+      console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "help");
       message.delete().then(() => {
         let help = new Discord.RichEmbed()
                 .addField("Help:", "----------------------------------------------------------------------------\n" +
-                                   "Type " + settingsreal.prefix + "commands to view all the commands \n" +
-                                   "Type " + settingsreal.prefix + "rules to view all the rules for the server \n" +
-                                   "Type " + settingsreal.prefix + "roles to view all the roles for the server \n" +
+                                   "Type " + prefix + "commands to view all the commands \n" +
+                                   "Type " + prefix + "rules to view all the rules for the server \n" +
+                                   "Type " + prefix + "roles to view all the roles for the server \n" +
                                    "----------------------------------------------------------------------------\n" +
                                    "Click the bin reaction to delete this message \n" +
                                    "----------------------------------------------------------------------------", true)
