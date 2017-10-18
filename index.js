@@ -292,6 +292,7 @@ bot.on("message", function(message){
               message.channel.send(message.author.toString() + " " + "The NEW Prefix for this bot is: " + settingsreal.prefix);
               bot.user.setGame("PREFIX: " + settingsreal.prefix);
             });
+            
           } else {
             return message.reply("Your need to have the \"ADMIN\" Role!").then(() => {
               console.log(`${message.author.username}` + " " + "Was Denied, trying to use the command " + settingsreal.prefix + "prefix");
