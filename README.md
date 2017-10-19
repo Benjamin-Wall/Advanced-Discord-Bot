@@ -29,6 +29,7 @@ userinfo - This shows whoever typed the command there profile info
 images [SEARCH TERM] - This gets a random image everyime based upon the search results
 memes - This gets a random meme from reddit, but there is alot of duplicates
 float [INSPECT URL] - This gets the float for the given inspect link
+playlist [YOUTUBE URL ID] - Adds all the songs from the playlist to the queue
 ```
 
 ## Admin Commands:
@@ -49,7 +50,6 @@ kick [@NAME] - To kick the mentioned user from the server.
 
 * add more commands
 * add more functionality
-* make YouTube playlists supported
 
 ## Built With:
 
