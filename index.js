@@ -713,7 +713,7 @@ bot.on("message", function(message){
                                                        "Type " + "__**" + prefix + "crosshair**__ to get the Developers CS:GO Crosshair\n" +
                                                        "Type " + "__**" + prefix + "*viewmodel**__ to get the Developers CS:GO Viewmodel\n" +
                                                        "Type " + "__**" + prefix + "invite**__ to get the perminent invite link for the server\n" +
-                                                       "Type " + "__**" + prefix + "userinfo**__ to show your profile info \n" +
+                                                       "Type " + "__**" + prefix + "userinfo [@NAME] **__ to show your profile info or mentioned info \n" +
                                                        "Type " + "__**" + prefix + "images [SEARCH TERM]**__ to get a random image from google\n" +
                                                        "Type " + "__**" + prefix + "memes**__ to get a random meme from reddit\n" +
                                                        "Type " + "__**" + prefix + "float [INSPECT URL]**__ to get the float of the given inspect link\n" +
