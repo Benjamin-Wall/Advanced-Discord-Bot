@@ -136,6 +136,13 @@ function play(connection, message){
 
     server.queue.shift();
 
+    if(server.queue[0] != undefined)
+      getYTinfo(server.queue[0], function(res){
+        NEXT_PLAYING = res.title;
+      });
+    else
+      NEXT_PLAYING = "Nothing";
+
     server.dispatcher.on("end", function(){
         if(server.queue[0]) play(connection, message);
         else connection.disconnect();
@@ -270,16 +277,34 @@ bot.on("message", function(message){
 
       case "userinfo":
           console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "userinfo");
-          var userinf = new Discord.RichEmbed()
-              .setAuthor(message.author.username)
-              .setThumbnail(message.author.avatarURL)
-              .setDescription("This is the user's info!")
-              .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
-              .addField("Full Username:", `${message.author.username}#${message.author.discriminator}`)
-              .addField("ID:", message.author.id)
-              .addField("Created At:", message.author.createdAt)
 
-              message.channel.send(userinf);
+          let memberInfo = message.mentions.members.first();
+
+          if(!memberInfo){
+            var userinf = new Discord.RichEmbed()
+                .setAuthor(message.author.username)
+                .setThumbnail(message.author.avatarURL)
+                .setDescription("This is the user's info!")
+                .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
+                .addField("Full Username:", `${message.author.username}#${message.author.discriminator}`)
+                .addField("ID:", message.author.id)
+                .addField("Created At:", message.author.createdAt)
+
+                message.channel.send(userinf);
+
+          }else{
+
+            var userinfoo = new Discord.RichEmbed()
+                .setAuthor(memberInfo.displayName)
+                .setThumbnail(memberInfo.user.avatarURL)
+                .setDescription("This is the user's info!")
+                .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
+                .addField("Full Username:", `${memberInfo.user.username}#${memberInfo.user.discriminator}`)
+                .addField("ID:", memberInfo.id)
+                .addField("Created At:", memberInfo.user.createdAt)
+
+                message.channel.send(userinfoo);
+          }
 
           break;
 
@@ -323,6 +348,10 @@ bot.on("message", function(message){
 
       case "prefix":
           if(message.member.hasPermission("ADMINISTRATOR")) {
+            if(!args[1]){
+              return message.channel.send("Please Enter a prefix please ¯\\_(ツ)_/¯")
+            }
+
             console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "prefix");
             var prefix_val = args[1];
             file.prefix[message.guild.id] = prefix_val;
@@ -343,6 +372,10 @@ bot.on("message", function(message){
 
       case "timer":
           let Timer = args[1];
+
+          if(!args[1]){
+            return message.channel.send("Please Enter a time period followed by \"s or m or h\"");
+          }
 
           message.channel.send("Timer Started for: " + `${ms(ms(Timer), {long: true})}`)
 
@@ -410,7 +443,11 @@ bot.on("message", function(message){
       case "rename":
         if(message.member.hasPermission("ADMINISTRATOR")) {
           console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "rename");
-          message.guild.member(bot.user).setNickname(message.content.substring(8)).then(user => message.channel.send("My New NickName is " + message.content.substring(8) + "!")).catch(console.error);
+
+          if(!args.slice(1).join(" ")){
+            return message.channel.send("Please enter a new name for the bot");
+          }
+          message.guild.member(bot.user).setNickname(args.slice(1).join(" ")).then(user => message.channel.send("My New NickName is " + args.slice(1).join(" ") + "!")).catch(console.error);
         } else {
           console.log(`${message.author.username}` + " " + "Was Denied Use of the command " + prefix + "rename");
           return message.reply("Your need to have the \"ADMINISTRATOR\" Permission")
@@ -422,9 +459,12 @@ bot.on("message", function(message){
           console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "coin");
           message.channel.send(message.author.toString() + " You Flipped: " + (hd[Math.floor(Math.random() * hd.length)]));
           break;
-      case "8ball":
 
+      case "8ball":
           console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "8ball");
+          if(!args[1]){
+            return message.channel.send("Please Enter A Question You Would Like Answered")
+          }
           if (args[1]) message.channel.send(fortunes[Math.floor(Math.random() * fortunes.length)]);
           else message.channel.send("I Wasnt Able To Read That :(");
           break;
@@ -468,12 +508,20 @@ bot.on("message", function(message){
       case "highlight":
         message.delete();
         console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "highlight");
+
+        if(!args.slice(1).join(" ")){
+          return message.channel.send("Please Enter Something For The Bot To Highligh With Syntax")
+        }
         message.channel.send("```" + args.slice(1).join(" ") + "```");
         break;
 
       case "speak":
           message.delete();
           console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "speak");
+
+          if(!args.slice(1).join(" ")){
+            return message.channel.send("Please Enter Something For The Bot To Say")
+          }
           message.channel.send(args.slice(1).join(" "));
         break;
 
@@ -507,11 +555,21 @@ bot.on("message", function(message){
 
             var server = servers[message.guild.id];
 
+            if(server.queue[0] != undefined)
+              getYTinfo(server.queue[0], function(res){
+                NEXT_PLAYING = res.title;
+              });
+            else
+              NEXT_PLAYING = "Nothing";
+
             getYTinfo(NOW_PLAYING, function(res){
 
               var np = new Discord.RichEmbed()
                       .addField("Song Name: ", res.title, true)
                       .addField("Uploaded By: ", res.channelTitle, false)
+                      .addField("Duration: ", res.duration, true)
+                      .addField("Up Next: ", NEXT_PLAYING, false)
+
                       .setThumbnail(res.thumbnail)
 
                       .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
@@ -523,6 +581,13 @@ bot.on("message", function(message){
 
           case "playlist":
               console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "play");
+              if(!args[1]){
+                return message.channel.send("Please Enter a YouTube Playlist Url");
+              }
+
+              if(args[1].indexOf("youtube.com") == -1){
+                return message.channel.send("Invalid Youtube Playlist Link!!");
+              }
 
               PLAYID = args[1].substring(args[1].lastIndexOf("list=") + 5 );
 
@@ -688,6 +753,9 @@ bot.on("message", function(message){
         if(message.member.hasPermission("ADMINISTRATOR")) {
           console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "clear");
           let messagecount = parseInt(args[1]);
+
+          if(isNaN(messagecount)) return message.channel.send("Please Enter A Numeric Value!");
+
           if(messagecount > 100){
             message.channel.send("Sorry, You can only clean upto 100 messages at a time!")
           }else if(messagecount < 2 ) {
@@ -695,7 +763,7 @@ bot.on("message", function(message){
           } else {
 
           }{
-            message.channel.fetchMessages({limit: messagecount}).then(messages => message.channel.bulkDelete(messages));
+            message.channel.fetchMessages({limit: messagecount}).then(messages => message.channel.bulkDelete(messages, true));
           }
         } else {
           console.log(`${message.author.username}` + " " + "Was Denied Use of the command " + prefix + "clean");
