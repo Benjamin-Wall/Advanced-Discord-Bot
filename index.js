@@ -637,6 +637,7 @@ bot.on("message", function(message){
                                                "Type " + "__**" + prefix + "invite**__ to get the perminent invite link for the server\n" +
                                                "Type " + "__**" + prefix + "notice**__ to get noticed by the bot \n" +
                                                "Type " + "__**" + prefix + "play [YOUTUBE URL]**__ to play a song from YouTube \n" +
+                                               "Type " + "__**" + prefix + "playlist [YOUTUBE URL ID]**__ to play a playlist from YouTube \n" +
                                                "----------------------------------------------------------------------------------------------\n", true)
 
                   .setColor("0x00FF00")
