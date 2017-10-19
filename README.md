@@ -25,9 +25,9 @@ notice - This is a basic command that shows how to reply to the person who used 
 play [YOUTUBE URL] - This can play a YouTube song, only 1 at a time
 skip - This skips the current song and plays the next one
 stop - This stops the currently playing song and disconnects the bot from the channel
-userinfo - This shows whoever typed the command there profile info
-images [SEARCH TERM] - This gets a random image everyime based upon the search results
-memes - This gets a random meme from reddit, but there is alot of duplicates
+userinfo [@NAME] - This shows the authors profile info, it will also show the mentioned persons info
+images [SEARCH TERM] - This gets a random image everytime based upon the search results
+memes - This gets a random meme from Reddit, but there is alot of duplicates
 float [INSPECT URL] - This gets the float for the given inspect link
 playlist [YOUTUBE URL ID] - Adds all the songs from the playlist to the queue
 np - To get the currently playing song
