@@ -50,6 +50,7 @@ kick [@NAME] - To kick the mentioned user from the server.
 
 * add more commands
 * add more functionality
+* add Now playing function
 
 ## Built With:
 
