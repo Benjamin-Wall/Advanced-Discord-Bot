@@ -30,6 +30,7 @@ require('console-stamp')(console, '[HH:MM:ss]');
 
 const TOKEN = file.TOKEN;
 const GreenStyle = chalk.green;
+var NOW_PLAYING = null;
 
 var EmbedColors = [
     "0xFF0000", //red
@@ -130,6 +131,8 @@ function play(connection, message){
     var server = servers[message.guild.id];
 
     server.dispatcher = connection.playStream(YTDL(server.queue[0], {filter: "audioonly"}));
+
+    NOW_PLAYING = server.queue[0];
 
     server.queue.shift();
 
@@ -500,32 +503,28 @@ bot.on("message", function(message){
 
           break;
 
-          // case "np":
-          //
-          //   var server = servers[message.guild.id];
-          //
-          //   getYTinfo(server.queue[0], function(res){
-          // 
-          //     // var np = new Discord.RichEmbed()
-          //     //         .addField("Song Name: ", res.title, true)
-          //     //         .addField("Uploaded By: ", res.channelTitle, false)
-          //     //         .setThumbnail(res.thumbnail)
-          //     //
-          //     //         .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
-          //     //
-          //     //          message.channel.send(np)
-          //
-          //      console.log(res.title);
-          //      console.log(res.thumbnail);
-          //      console.log(res.channelTitle);
-          //
-          //   });
-          // break;
+          case "np":
+
+            var server = servers[message.guild.id];
+
+            getYTinfo(NOW_PLAYING, function(res){
+
+              var np = new Discord.RichEmbed()
+                      .addField("Song Name: ", res.title, true)
+                      .addField("Uploaded By: ", res.channelTitle, false)
+                      .setThumbnail(res.thumbnail)
+
+                      .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
+
+                       message.channel.send(np)
+
+            });
+          break;
 
           case "playlist":
               console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "play");
 
-              var PLAYID = args[1];
+              PLAYID = args[1].substring(args[1].lastIndexOf("list=") + 5 );
 
               var url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=" + PLAYID + "&key=" + file.YT_API;
 
@@ -637,7 +636,7 @@ bot.on("message", function(message){
                                                "Type " + "__**" + prefix + "invite**__ to get the perminent invite link for the server\n" +
                                                "Type " + "__**" + prefix + "notice**__ to get noticed by the bot \n" +
                                                "Type " + "__**" + prefix + "play [YOUTUBE URL]**__ to play a song from YouTube \n" +
-                                               "Type " + "__**" + prefix + "playlist [YOUTUBE URL ID]**__ to play a playlist from YouTube \n" +
+                                               "Type " + "__**" + prefix + "playlist [YOUTUBE PLAYLIST URL]**__ to play a playlist from YouTube \n" +
                                                "----------------------------------------------------------------------------------------------\n", true)
 
                   .setColor("0x00FF00")
@@ -653,6 +652,7 @@ bot.on("message", function(message){
                                                        "Type " + "__**" + prefix + "images [SEARCH TERM]**__ to get a random image from google\n" +
                                                        "Type " + "__**" + prefix + "memes**__ to get a random meme from reddit\n" +
                                                        "Type " + "__**" + prefix + "float [INSPECT URL]**__ to get the float of the given inspect link\n" +
+                                                       "Type " + "__**" + prefix + "np**__ to get the currently playing song\n" +
                                                        "----------------------------------------------------------------------------------------------\n", true)
 
                           .setColor("0x00FF00")
