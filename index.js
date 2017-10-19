@@ -207,6 +207,8 @@ bot.on("ready", function(){
   console.log(GreenStyle("----------------------------------------"));
   console.log(GreenStyle("Logging Woll Now Start...               "));
   console.log(GreenStyle("----------------------------------------"));
+  
+  bot.user.setGame("MENTION 4 PREFX");
 
 });
 
@@ -215,7 +217,26 @@ bot.on("message", function(message){
 
     var prefix = (file.prefix[message.guild.id] == undefined) ? file.prefix["default"] : file.prefix[message.guild.id];
 
-    //console.log(prefix);
+    let help111 = new Discord.RichEmbed()
+            .addField("Help:", "----------------------------------------------------------------------------\n" +
+                               "Type " + prefix + "commands to view all the commands \n" +
+                               "Type " + prefix + "rules to view all the rules for the server \n" +
+                               "Type " + prefix + "roles to view all the roles for the server \n" +
+                               "----------------------------------------------------------------------------\n" +
+                               "Click the bin reaction to delete this message \n" +
+                               "----------------------------------------------------------------------------", true)
+
+            .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
+
+    // if (message.content.indexOf(file.BOT_ID) >= 0) return message.channel.send("The Preifx For this Server Is: " + prefix);
+
+    if (message.content.indexOf(file.BOT_ID) >= 0) {
+      message.channel.send("The Preifx For this Server Is: " + prefix);
+      message.channel.send(help111).then(function (message) {
+        message.react("%F0%9F%97%91")
+        })
+    }
+
     if (!message.content.startsWith(prefix)) return;
 
     var args = message.content.substring(prefix.length).split(" ");
@@ -820,28 +841,28 @@ bot.on("message", function(message){
       })
           break;
 
-      case "help":
-      console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "help");
-      message.delete().then(() => {
-        let help = new Discord.RichEmbed()
-                .addField("Help:", "----------------------------------------------------------------------------\n" +
-                                   "Type " + prefix + "commands to view all the commands \n" +
-                                   "Type " + prefix + "rules to view all the rules for the server \n" +
-                                   "Type " + prefix + "roles to view all the roles for the server \n" +
-                                   "----------------------------------------------------------------------------\n" +
-                                   "Click the bin reaction to delete this message \n" +
-                                   "----------------------------------------------------------------------------", true)
-
-                .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
-
-        message.channel.send(help)
-
-        .then(function (message) {
-          message.react("%E2%9D%93").then(() => {
-            message.react("%F0%9F%97%91")
-          })
-        })
-      })
+      // case "help":
+      // console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "help");
+      // message.delete().then(() => {
+      //   let help = new Discord.RichEmbed()
+      //           .addField("Help:", "----------------------------------------------------------------------------\n" +
+      //                              "Type " + prefix + "commands to view all the commands \n" +
+      //                              "Type " + prefix + "rules to view all the rules for the server \n" +
+      //                              "Type " + prefix + "roles to view all the roles for the server \n" +
+      //                              "----------------------------------------------------------------------------\n" +
+      //                              "Click the bin reaction to delete this message \n" +
+      //                              "----------------------------------------------------------------------------", true)
+      //
+      //           .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
+      //
+      //   message.channel.send(help)
+      //
+      //   .then(function (message) {
+      //     message.react("%E2%9D%93").then(() => {
+      //       message.react("%F0%9F%97%91")
+      //     })
+      //   })
+      // })
 
           break;
 
