@@ -5,12 +5,15 @@ var YTDL = require('ytdl-core');
 const chalk = require('chalk');
 var colors = require('colors');
 var ytdl = require('youtube-dl')
+
 var findYoutubeUrls = require('find-youtube-urls');
 const SteamTotp = require('steam-totp');
 var fs = require('fs');
 var shuffle = require('shuffle-array');
 var memes = require('dankmemes');
 const GoogleImages = require('google-images');
+var path = require('path');
+var fs   = require('fs');
 
 const configS = require('./ConfigSammy.json');
 const configJ = require('./ConfigJack.json');
@@ -133,6 +136,45 @@ function play(connection, message){
     server.dispatcher.on("end", function(){
         if(server.queue[0]) play(connection, message);
         else connection.disconnect();
+    });
+}
+
+function getYTinfo(yturl, response) {
+
+    let domains = ['youtu.be', 'youtube.com'];
+
+    let key = file.YT_API;
+
+    let id = "";
+
+    if(yturl.indexOf(domains[0]) > 0) {
+        id = yturl.substring(yturl.lastIndexOf("/") + 1 );
+    }
+    else if(yturl.indexOf(domains[1]) > 0) {
+        let lastPos = yturl.indexOf("&") > 0 ? yturl.indexOf("&") : 0;
+
+        if(lastPos == 0) id = yturl.substring(yturl.indexOf("v=") +2);
+        else id = yturl.substring(yturl.indexOf("v=") +2, lastPos);
+    }
+    else {
+        return "Invalid URL";
+    }
+
+    let api_url = "https://www.googleapis.com/youtube/v3/videos?part=contentDetails%2C+snippet&id=" + id + "&fields=etag%2CeventId%2Citems%2Ckind%2CnextPageToken%2CpageInfo%2CprevPageToken%2CtokenPagination%2CvisitorId&key=" + key;
+
+    getJSON(api_url, function(err, data){
+        var return_data = [];
+        return_data['title'] = data.items[0].snippet.title;
+        return_data['thumbnail'] = data.items[0].snippet.thumbnails.medium.url;
+        return_data['channelTitle'] = data.items[0].snippet.channelTitle;
+        let dur = data.items[0].contentDetails.duration;
+        dur = dur.replace("PT", "");
+        dur = dur.replace("H", ":");
+        dur = dur.replace("M", ":");
+        dur = dur.replace("S", "");
+        return_data['duration'] = dur;
+
+        response(return_data);
     });
 }
 
@@ -307,31 +349,6 @@ bot.on("message", function(message){
           }, ms(Timer));
           break;
 
-      // case "mute":
-      // if(message.member.hasPermission("ADMINISTRATOR")) {
-      //   console.log(`${message.author.username}` + " " + "Used The Command " + file.prefix[message.guild.id] + "mute");
-      //   let member = message.mentions.members.first();
-      //   if(!member) return message.reply("You need to mention a user/member!");
-      //   let muteRole = message.guild.roles.find("name", "Muted");
-      //   if(!muteRole) return message.reply("There is no such thing as a \"Muted\" role!");
-      //   let time = args[2];
-      //   if(!time) return message.reply("there is no specific amount of time mentioned, enter a certain amount of time to be muted for!");
-      //
-      //   member.addRole(muteRole.id);
-      //   message.channel.send(message.author.toString() + ` you have been muted for: ${ms(ms(time), {long: true})}`);
-      //
-      //   setTimeout(function(){
-      //     member.removeRole(muteRole.id);
-      //     message.channel.send(message.author.toString() + ` you have been unmuted the mute lasted: ${ms(ms(time), {long: true})}`)
-      //
-      //   }, ms(time));
-      //
-      //   }else {
-      //     console.log(`${message.author.username}` + " " + "Was Denied Use of the command " + file.prefix[message.guild.id] + "mute");
-      //     return message.reply("Your need to have the \"ADMINISTRATOR\" Permission")
-      //   };
-      //   break;
-
         case "addrole":
         if(message.member.hasPermission("ADMINISTRATOR")) {
           console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "addrole");
@@ -479,71 +496,65 @@ bot.on("message", function(message){
 
           if (!message.guild.voiceConnection) message.member.voiceChannel.join().then(function(connection){
               play(connection, message);
-              message.delete().then(() => {
-                var url = args[1];
+           });
 
-                ytdl.getInfo(url, function(err, info) {
-
-                  'use strict';
-                  if (err) { throw err; }
-
-                  var ans = findYoutubeUrls(args[1]);
-
-                  var a_song = new Discord.RichEmbed()
-                  .addField("Song Name: ", `\`${info.title}\``, true)
-                  .addField("Total Time: ", `\`${info.duration}\``, false)
-                  .addField("Requested By: ", `\`${message.author.username}\``, true)
-                  .addField("Url: ", ans, true)
-                  .setThumbnail(info.thumbnail)
-
-                  // .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
-                  .setColor("0x#FF0000")
-                  message.channel.send(a_song)
-
-                  .then(function (message) {
-                                 message.react("viewmodel:358741579374264321").then(() => {
-                                   message.react("crosshair:358741278109859842").then(() => {
-                                     message.react("%E2%9D%93").then(() => {
-                                       message.react("%F0%9F%97%91")
-                                     })
-                                   })
-                                 })
-
-                              }).catch(function() {
-                                //Something
-                               });
-              })
-          });
-      });
           break;
+
+          case "np":
+
+            var server = servers[message.guild.id];
+
+            getYTinfo(server.queue[0], function(res){
+
+              // var np = new Discord.RichEmbed()
+              //         .addField("Song Name: ", res.title, true)
+              //         .addField("Uploaded By: ", res.channelTitle, false)
+              //         .setThumbnail(res.thumbnail)
+              //
+              //         .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
+              //
+              //          message.channel.send(np)
+
+               console.log(res.title);
+               console.log(res.thumbnail);
+               console.log(res.channelTitle);
+
+            });
+          break;
+
+          case "playlist":
+              console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "play");
+
+              var PLAYID = args[1];
+
+              var url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=" + PLAYID + "&key=" + file.YT_API;
+
+              var json = getJSON(url, function(err, data){
+                var data = data.items;
+                data.forEach(function(element) {
+                  if(!servers[message.guild.id]) servers[message.guild.id] = {
+                     queue: []
+                  };
+
+                  var server = servers[message.guild.id];
+
+                  server.queue.push("https://www.youtube.com/watch?v=" + element.snippet.resourceId.videoId);
+
+                }, this);
+              });
+
+              if (!message.guild.voiceConnection) message.member.voiceChannel.join().then(function(connection){
+                  play(connection, message);
+               });
+
+              break;
 
       case "skip":
           console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "skip");
           var server = servers[message.guild.id];
-          var url = server.queue[0];
-
-          ytdl.getInfo(url, function(err, info) {
-
-            'use strict';
-            if (err) { throw err; }
-
-            var ans = findYoutubeUrls(server.queue[0]);
-
-            var b_song = new Discord.RichEmbed()
-            .addField("Song Name: ", `\`${info.title}\``, true)
-            .addField("Total Time: ", `\`${info.duration}\``, false)
-            .addField("Requested By: ", `\`${message.author.username}\``, true)
-            .addField("Url: ", ans, true)
-            .setThumbnail(info.thumbnail)
-
-            // .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
-            .setColor("0x#FF0000")
-            message.channel.send(b_song)
-           //message.channel.send("Now playing " + server.queue[0])
 
           if (server.dispatcher) server.dispatcher.end();
 
-        });
           break;
 
       case "stop":
@@ -566,7 +577,6 @@ bot.on("message", function(message){
        message.delete().then(() => {
 
          message.channel.send(cross)
-         //message.channel.send(embed2)
 
          .then(function (message) {
                         message.react("viewmodel:358741579374264321").then(() => {
@@ -578,7 +588,6 @@ bot.on("message", function(message){
                         })
 
                      }).catch(function() {
-                       //Something
                       });
        })
 
@@ -737,11 +746,7 @@ bot.on("message", function(message){
                            })
                          })
                        })
-
-                      //  message.react("viewmodel:358741579374264321")
-                      //  message.react("%E2%9D%93")
                     }).catch(function() {
-                      //Something
                      });
       })
           break;
@@ -768,10 +773,6 @@ bot.on("message", function(message){
           })
         })
       })
-
-      // if (args[0] == "help" && args[1] == "test"){      //example of using ^help test, could be usefull for command
-      //   message.channel.send("Yaay");                   //explanation
-      // }
 
           break;
 
