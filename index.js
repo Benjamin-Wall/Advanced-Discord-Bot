@@ -500,27 +500,27 @@ bot.on("message", function(message){
 
           break;
 
-          case "np":
-
-            var server = servers[message.guild.id];
-
-            getYTinfo(server.queue[0], function(res){
-
-              // var np = new Discord.RichEmbed()
-              //         .addField("Song Name: ", res.title, true)
-              //         .addField("Uploaded By: ", res.channelTitle, false)
-              //         .setThumbnail(res.thumbnail)
-              //
-              //         .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
-              //
-              //          message.channel.send(np)
-
-               console.log(res.title);
-               console.log(res.thumbnail);
-               console.log(res.channelTitle);
-
-            });
-          break;
+          // case "np":
+          //
+          //   var server = servers[message.guild.id];
+          //
+          //   getYTinfo(server.queue[0], function(res){
+          // 
+          //     // var np = new Discord.RichEmbed()
+          //     //         .addField("Song Name: ", res.title, true)
+          //     //         .addField("Uploaded By: ", res.channelTitle, false)
+          //     //         .setThumbnail(res.thumbnail)
+          //     //
+          //     //         .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
+          //     //
+          //     //          message.channel.send(np)
+          //
+          //      console.log(res.title);
+          //      console.log(res.thumbnail);
+          //      console.log(res.channelTitle);
+          //
+          //   });
+          // break;
 
           case "playlist":
               console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "play");
