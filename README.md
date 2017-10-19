@@ -60,5 +60,5 @@ kick [@NAME] - To kick the mentioned user from the server.
 ## Authors:
 
 * **Ben Wall** - Main Coder
-* **[Alen Kalac] (https://github.com/alenkalac)** - Main Coder
+* **Alen Kalac** - Assistant Coder
 * **James Broadberry** - Code Tester
