@@ -15,15 +15,15 @@ const GoogleImages = require('google-images');
 var path = require('path');
 var fs   = require('fs');
 
-const configS = require('./ConfigSammy.json');
-const configJ = require('./ConfigJack.json');
-const configB = require('./ConfigBen.json');
+const configS = require('./settingsConfig/ConfigSammy.json');
+const configJ = require('./settingsConfig/ConfigJack.json');
+const configB = require('./settingsConfig/ConfigBen.json');
 
 var JackCode = SteamTotp.getAuthCode(configJ.sharedSecret);
 var BenCode = SteamTotp.getAuthCode(configB.sharedSecret);
 var SammyCode = SteamTotp.getAuthCode(configS.sharedSecret);
 
-var settings = './settings.json';
+var settings = './settingsConfig/settings.json';
 var file = require(settings)
 
 require('console-stamp')(console, '[HH:MM:ss]');
@@ -207,7 +207,7 @@ bot.on("ready", function(){
   console.log(GreenStyle("----------------------------------------"));
   console.log(GreenStyle("Logging Woll Now Start...               "));
   console.log(GreenStyle("----------------------------------------"));
-  
+
   bot.user.setGame("MENTION 4 PREFX");
 
 });
