@@ -1,8 +1,2 @@
 node_modules/
-backup/
-ConfigBen.json
-ConfigJack.json
-ConfigSammy.json
-settings.json
-git_help.txt
-pm2 help.txt
+settingsConfig/
