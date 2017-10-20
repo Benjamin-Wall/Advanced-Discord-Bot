@@ -638,7 +638,14 @@ bot.on("message", function(message){
           console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "skip");
           var server = servers[message.guild.id];
 
-          if (server.dispatcher) server.dispatcher.end();
+          if (server.dispatcher) {
+
+            server.dispatcher.end();
+
+          }else{
+
+            return message.channel.send("Cannot Do that!");
+          }
 
           break;
 
@@ -732,7 +739,7 @@ bot.on("message", function(message){
                                                        "Type " + "__**" + prefix + "skip**__ to play the next song in the queue \n" +
                                                        "Type " + "__**" + prefix + "stop**__ to stop the currently playing song \n" +
                                                        "Type " + "__**" + prefix + "crosshair**__ to get the Developers CS:GO Crosshair\n" +
-                                                       "Type " + "__**" + prefix + "*viewmodel**__ to get the Developers CS:GO Viewmodel\n" +
+                                                       "Type " + "__**" + prefix + "viewmodel**__ to get the Developers CS:GO Viewmodel\n" +
                                                        "Type " + "__**" + prefix + "invite**__ to get the perminent invite link for the server\n" +
                                                        "Type " + "__**" + prefix + "userinfo [@NAME] **__ to show your profile info or mentioned info \n" +
                                                        "Type " + "__**" + prefix + "images [SEARCH TERM]**__ to get a random image from google\n" +
