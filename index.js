@@ -780,7 +780,6 @@ bot.on("message", function(message){
                                                "Type " + "__**" + prefix + "notice**__ to get noticed by the bot \n" +
                                                "Type " + "__**" + prefix + "play [YOUTUBE URL]**__ to play a song from YouTube \n" +
                                                "Type " + "__**" + prefix + "playlist [YOUTUBE PLAYLIST URL]**__ to play a playlist from YouTube \n" +
-                                               "Type " + "__**" + prefix + "join**__ to join your voice channel\n" +
                                                "----------------------------------------------------------------------------------------------\n", true)
 
                   .setColor("0x00FF00")
@@ -797,7 +796,6 @@ bot.on("message", function(message){
                                                        "Type " + "__**" + prefix + "memes**__ to get a random meme from reddit\n" +
                                                        "Type " + "__**" + prefix + "float [INSPECT URL]**__ to get the float of the given inspect link\n" +
                                                        "Type " + "__**" + prefix + "np**__ to get the currently playing song\n" +
-                                                       "Type " + "__**" + prefix + "disconnect**__ to leave your voice channel\n" +
                                                        "----------------------------------------------------------------------------------------------\n", true)
 
                           .setColor("0x00FF00")
