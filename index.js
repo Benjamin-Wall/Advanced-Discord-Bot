@@ -586,29 +586,6 @@ bot.on("message", function(message){
 
           break;
 
-          case "disconnect":
-          if (message.guild.voiceConnection) {
-            message.channel.send("I have Succesfully disconnected")
-            return message.member.voiceChannel.leave();
-          }else{
-            return message.channel.send("I am not in a voice channel, therefore i cannot leave")
-          }
-          break;
-
-          case "join":
-
-          if (!message.member.voiceChannel){
-              message.channel.send("You Mut Be In A Voice Channel!");
-              return;
-          }
-
-          if (!message.guild.voiceConnection) {
-            message.channel.send("I have Succesfully joined")
-            return message.member.voiceChannel.join();
-          }else{
-            return message.channel.send("I am already in a voice channel, therefore i cannot join")
-          }
-
           case "np":
 
             if(!servers[message.guild.id]) servers[message.guild.id] = {
@@ -665,7 +642,15 @@ bot.on("message", function(message){
                 return message.channel.send("Invalid Youtube Playlist Link!!");
               }
 
-              PLAYID = args[1].substring(args[1].lastIndexOf("list=") + 5 );
+              var ytlink = args[1];
+              var re = /(http(s)?:\/\/)?(w{3}\.)?youtube\.com\/(watch|playlist)\?(v=|list=)[a-zA-Z0-9-_]+(&)?(list=)?[a-zA-Z0-9-_]+/gi;
+
+              var found = ytlink.match(re);
+
+              if(found == null)
+                  return message.channel.send("Please Enter A YouTube Playlist Link!");
+
+              PLAYID = found[0].substring(found[0].lastIndexOf("list=") + 5 );
 
               var url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=" + PLAYID + "&key=" + file.YT_API;
 
@@ -677,7 +662,6 @@ bot.on("message", function(message){
                   };
 
                   var server = servers[message.guild.id];
-
                   server.queue.push("https://www.youtube.com/watch?v=" + element.snippet.resourceId.videoId);
 
                 }, this);
@@ -916,28 +900,26 @@ bot.on("message", function(message){
       })
           break;
 
-      // case "help":
-      // console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "help");
-      // message.delete().then(() => {
-      //   let help = new Discord.RichEmbed()
-      //           .addField("Help:", "----------------------------------------------------------------------------\n" +
-      //                              "Type " + prefix + "commands to view all the commands \n" +
-      //                              "Type " + prefix + "rules to view all the rules for the server \n" +
-      //                              "Type " + prefix + "roles to view all the roles for the server \n" +
-      //                              "----------------------------------------------------------------------------\n" +
-      //                              "Click the bin reaction to delete this message \n" +
-      //                              "----------------------------------------------------------------------------", true)
-      //
-      //           .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
-      //
-      //   message.channel.send(help)
-      //
-      //   .then(function (message) {
-      //     message.react("%E2%9D%93").then(() => {
-      //       message.react("%F0%9F%97%91")
-      //     })
-      //   })
-      // })
+      case "help":
+      console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "help");
+      message.delete().then(() => {
+        let help = new Discord.RichEmbed()
+                .addField("Help:", "----------------------------------------------------------------------------\n" +
+                                   "Type " + prefix + "commands to view all the commands \n" +
+                                   "Type " + prefix + "rules to view all the rules for the server \n" +
+                                   "Type " + prefix + "roles to view all the roles for the server \n" +
+                                   "----------------------------------------------------------------------------\n" +
+                                   "Click the bin reaction to delete this message \n" +
+                                   "----------------------------------------------------------------------------", true)
+
+                .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
+
+        message.channel.send(help)
+
+        .then(function (message) {
+          message.react("%F0%9F%97%91")
+        })
+      })
 
           break;
 
