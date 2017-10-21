@@ -30,7 +30,7 @@ require('console-stamp')(console, '[HH:MM:ss]');
 
 const TOKEN = file.TOKEN;
 const GreenStyle = chalk.green;
-var NOW_PLAYING = null;
+var NOW_PLAYING = "Nothing";
 
 var EmbedColors = [
     "0xFF0000", //red
@@ -145,7 +145,11 @@ function play(connection, message){
 
     server.dispatcher.on("end", function(){
         if(server.queue[0]) play(connection, message);
-        else connection.disconnect();
+        else{
+          connection.disconnect();
+          NOW_PLAYING = "Nothing";
+        }
+
     });
 }
 
@@ -548,6 +552,7 @@ bot.on("message", function(message){
 
       case "play":
           console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "play");
+
           if (!args[1]){
               message.channel.send("Please Provide A Link (YouTube link)");
               return;
@@ -563,41 +568,62 @@ bot.on("message", function(message){
           };
 
           var server = servers[message.guild.id];
+          var ytlink = args[1];
+          var re = /(www\.youtube\.com\/watch\?v=)[a-zA-z0-9-]{11}/gi;
 
-          server.queue.push(args[1]);
+          var found = ytlink.match(re);
 
-          if (!message.guild.voiceConnection) message.member.voiceChannel.join().then(function(connection){
-              play(connection, message);
-           });
+          if(found == null){
+            message.channel.send("Please Enter A YouTube Link!");
+          }else{
+            server.queue.push(found[0]);
+            if (!message.guild.voiceConnection) message.member.voiceChannel.join().then(function(connection){
+                play(connection, message);
+             });
+          }
+
+          // server.queue.push(found[0]);
 
           break;
 
           case "np":
 
+            if(!servers[message.guild.id]) servers[message.guild.id] = {
+              queue: []
+            };
+
             var server = servers[message.guild.id];
 
-            if(server.queue[0] != undefined)
-              getYTinfo(server.queue[0], function(res){
-                NEXT_PLAYING = res.title;
-              });
-            else
-              NEXT_PLAYING = "Nothing";
+              if(server.queue[0] != undefined)
+                getYTinfo(server.queue[0], function(res){
+                  NEXT_PLAYING = res.title;
+                });
+              else
+                NEXT_PLAYING = "Nothing";
 
-            getYTinfo(NOW_PLAYING, function(res){
 
-              var np = new Discord.RichEmbed()
-                      .addField("Song Name: ", res.title, true)
-                      .addField("Uploaded By: ", res.channelTitle, false)
-                      .addField("Duration: ", res.duration, true)
-                      .addField("Up Next: ", NEXT_PLAYING, false)
+              if(NOW_PLAYING == "Nothing"){
 
-                      .setThumbnail(res.thumbnail)
+                message.channel.send("Nothing is playing idiot!");
 
-                      .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
+              }else{
+                getYTinfo(NOW_PLAYING, function(res){
 
-                       message.channel.send(np)
+                  var np = new Discord.RichEmbed()
+                          .addField("Song Name: ", res.title, true)
+                          .addField("Uploaded By: ", res.channelTitle, false)
+                          .addField("Duration: ", res.duration, true)
+                          .addField("Up Next: ", NEXT_PLAYING, false)
 
-            });
+                          .setThumbnail(res.thumbnail)
+
+                          .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
+
+                           message.channel.send(np)
+
+                });
+              }
+
           break;
 
           case "playlist":
@@ -638,14 +664,24 @@ bot.on("message", function(message){
           console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "skip");
           var server = servers[message.guild.id];
 
-          if (server.dispatcher) {
-
-            server.dispatcher.end();
-
-          }else{
-
-            return message.channel.send("Cannot Do that!");
+          try {
+            if (server.dispatcher) {
+              server.dispatcher.end();
+            }else{
+              return message.channel.send("Cannot Do that!");
+            }
+          } catch(e) {
+            NOW_PLAYING = "Nothing";
+            return message.channel.send("Noting To skip my man");
           }
+
+          // if(!servers[message.guild.id]) servers[message.guild.id] = {
+          //    queue: []
+          // };
+          //
+          // if(server.queue.length == 0){
+          //
+          // }
 
           break;
 
@@ -660,6 +696,7 @@ bot.on("message", function(message){
                 server.queue.splice(i, 1);
          }
             server.dispatcher.end();
+            NOW_PLAYING = "Nothing";
             //console.log("[" + new Date().toLocaleString() + "] Stopped the queue.");
         }﻿
           break;
