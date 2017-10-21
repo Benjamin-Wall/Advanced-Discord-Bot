@@ -569,7 +569,7 @@ bot.on("message", function(message){
 
           var server = servers[message.guild.id];
           var ytlink = args[1];
-          var re = /(www\.youtube\.com\/watch\?v=)[a-zA-z0-9-]{11}/gi;
+          var re = /(http(s)?:\/\/)?(www\.)?youtu(be|\.be)(\.com)?\/(watch\?v=)?[a-zA-Z0-9_-]{11}/gi;
 
           var found = ytlink.match(re);
 
