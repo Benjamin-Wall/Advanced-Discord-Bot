@@ -32,8 +32,6 @@ memes - This gets a random meme from Reddit, but there is alot of duplicates
 float [INSPECT URL] - This gets the float for the given inspect link
 playlist [YOUTUBE URL ID] - Adds all the songs from the playlist to the queue
 np - To get the currently playing song
-join - to join the voice channel that your in
-disconnect - to leave the voice channel that your in
 ```
 
 ## Admin Commands:
