@@ -42,7 +42,7 @@ NOTE: ignore the [ ] that just shows what should be there when entering the comm
 
 ```
 dev - This is just a simple reply to the user
-prefix [NEW PREFIX] - This can change the bots prefix (globally), i am working on a local version
+prefix [NEW PREFIX] - This can change the bots prefix (locally)
 rename [NAME] - This renames the bot to whatever "name" is
 clear [NUMBER] - This purge deletes any amount of number of messages in a text channel
 addrole [@NAME] [ROLE] [LENGTH] - This adds the role of the mentioned person for certain time
