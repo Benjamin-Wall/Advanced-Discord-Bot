@@ -559,7 +559,7 @@ bot.on("message", function(message){
           }
 
           if (!message.member.voiceChannel){
-              message.channel.send("You Mut Be In A Voice Channel!");
+              message.channel.send("You Must Be In A Voice Channel!");
               return;
           }
 
@@ -585,6 +585,29 @@ bot.on("message", function(message){
           // server.queue.push(found[0]);
 
           break;
+
+          case "disconnect":
+          if (message.guild.voiceConnection) {
+            message.channel.send("I have Succesfully disconnected")
+            return message.member.voiceChannel.leave();
+          }else{
+            return message.channel.send("I am not in a voice channel, therefore i cannot leave")
+          }
+          break;
+
+          case "join":
+
+          if (!message.member.voiceChannel){
+              message.channel.send("You Mut Be In A Voice Channel!");
+              return;
+          }
+
+          if (!message.guild.voiceConnection) {
+            message.channel.send("I have Succesfully joined")
+            return message.member.voiceChannel.join();
+          }else{
+            return message.channel.send("I am already in a voice channel, therefore i cannot join")
+          }
 
           case "np":
 
@@ -628,6 +651,12 @@ bot.on("message", function(message){
 
           case "playlist":
               console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "play");
+
+              if (!message.member.voiceChannel){
+                  message.channel.send("You Must Be In A Voice Channel!");
+                  return;
+              }
+
               if(!args[1]){
                 return message.channel.send("Please Enter a YouTube Playlist Url");
               }
