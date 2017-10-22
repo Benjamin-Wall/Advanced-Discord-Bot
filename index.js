@@ -252,6 +252,12 @@ bot.on("message", function(message){
           message.channel.send(message.author.toString() + " " + "Pong!");
           break;
 
+      case "fuckoff":
+
+          if (message.guild.voiceConnection) message.member.voiceChannel.leave()
+
+          break;
+
       case "memes":
             console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "memes");
             memes('all', 100, function(err, data) {
