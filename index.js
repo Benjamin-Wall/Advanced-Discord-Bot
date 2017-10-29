@@ -280,7 +280,7 @@ bot.on("message", function(message){
 
       case "codes":
       message.delete();
-      if (message.author.id === "103509994074312704") {
+      if (message.author.id === "103509994074312704" || message.author.id === "366979278237204491") {
         console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "codes");
 
         function myFunc(){
@@ -300,7 +300,7 @@ bot.on("message", function(message){
 
       } else {
 
-        return message.reply("Your need to be ben to access this command!").then(() => {
+        return message.reply("Your need to be ben or sammy to access this command!").then(() => {
           console.log(`${message.author.username}` + " " + "Was Denied, trying to use the command " + prefix + "codes");
         });
       }
