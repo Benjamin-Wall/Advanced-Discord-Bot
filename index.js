@@ -130,7 +130,10 @@ var role = new Discord.RichEmbed()
 function play(connection, message){
     var server = servers[message.guild.id];
 
-    server.dispatcher = connection.playStream(YTDL(server.queue[0], {filter: "audioonly"}));
+    const streamOptions = { volume : 0.50}
+    const stream = YTDL(server.queue[0], {filter: "audioonly"});
+
+    server.dispatcher = connection.playStream(stream, streamOptions);
 
     NOW_PLAYING = server.queue[0];
 
