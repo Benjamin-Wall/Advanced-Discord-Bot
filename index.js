@@ -232,8 +232,6 @@ bot.on("message", function(message){
 
             .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
 
-    // if (message.content.indexOf(file.BOT_ID) >= 0) return message.channel.send("The Preifx For this Server Is: " + prefix);
-
     if (message.content.indexOf(file.BOT_ID) >= 0) {
       message.channel.send("The Preifx For this Server Is: " + prefix);
       message.channel.send(help111).then(function (message) {
@@ -252,11 +250,21 @@ bot.on("message", function(message){
           message.channel.send(message.author.toString() + " " + "Pong!");
           break;
 
-      case "fuckoff":
+          case "fuckoff":
+              console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "fuckoff");
+              var server = servers[message.guild.id];
 
-          if (message.guild.voiceConnection) message.member.voiceChannel.leave()
-
-          break;
+              if (message.guild.voiceConnection)
+            {
+                for (var i = server.queue.length - 1; i >= 0; i--)
+                {
+                    server.queue.splice(i, 1);
+             }
+                server.dispatcher.end();
+                NOW_PLAYING = "Nothing";
+                //console.log("[" + new Date().toLocaleString() + "] Stopped the queue.");
+            }﻿
+              break;
 
       case "memes":
             console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "memes");
@@ -300,7 +308,7 @@ bot.on("message", function(message){
 
       } else {
 
-        return message.reply("Your need to be ben or sammy to access this command!").then(() => {
+        return message.reply(":x: " + "| You need to be ben or sammy to access this command!").then(() => {
           console.log(`${message.author.username}` + " " + "Was Denied, trying to use the command " + prefix + "codes");
         });
       }
@@ -342,12 +350,12 @@ bot.on("message", function(message){
     case "float":
       message.delete().then(() =>{
         if(!args[1]){
-          return message.channel.send("Please enter an inspect link for your awesome skin/weapon");
+          return message.channel.send(":x: " + "| Please enter an inspect link for your awesome skin/weapon");
         }else{
           getJSON("https://api.csgofloat.com:1738/?url=" + args[1], function(error, data){
 
             if(data == undefined){
-              return message.channel.send("Please enter a valid inspect link for your awesome skin/weapon");
+              return message.channel.send(":x: " + "| Please enter a valid inspect link for your awesome skin/weapon");
             }
 
             var float = new Discord.RichEmbed()
@@ -380,7 +388,7 @@ bot.on("message", function(message){
       case "prefix":
           if(message.member.hasPermission("ADMINISTRATOR")) {
             if(!args[1]){
-              return message.channel.send("Please Enter a prefix please ¯\\_(ツ)_/¯")
+              return message.channel.send(":x: " + "| Please Enter a prefix please ¯\\_(ツ)_/¯")
             }
 
             console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "prefix");
@@ -391,11 +399,11 @@ bot.on("message", function(message){
               //var test = fs.readFileSync("settings.json")
               //settingsreal = JSON.parse(test)
 
-              message.channel.send(message.author.toString() + " " + "The NEW Prefix for this bot is: " + prefix_val);
+              message.channel.send(":white_check_mark: " + "| The NEW Prefix for this bot is: " + prefix_val);
             });
 
           } else {
-            return message.reply("Your need to have the \"ADMINISTRATOR\" Permission").then(() => {
+            return message.reply(":x: " + "| You need to have the \"ADMINISTRATOR\" Permission").then(() => {
               console.log(`${message.author.username}` + " " + "Was Denied, trying to use the command " + prefix + "prefix");
             });
           }
@@ -405,10 +413,10 @@ bot.on("message", function(message){
           let Timer = args[1];
 
           if(!args[1]){
-            return message.channel.send("Please Enter a time period followed by \"s or m or h\"");
+            return message.channel.send(":x: " + "| Please Enter a time period followed by \"s or m or h\"");
           }
 
-          message.channel.send("Timer Started for: " + `${ms(ms(Timer), {long: true})}`)
+          message.channel.send(":white_check_mark: " + "| Timer Started for: " + `${ms(ms(Timer), {long: true})}`)
 
           setTimeout(function(){
             message.channel.send(message.author.toString() + ` The Timer Has FINISHED!, it lasted: ${ms(ms(Timer), {long: true})}`)
@@ -420,9 +428,9 @@ bot.on("message", function(message){
         if(message.member.hasPermission("ADMINISTRATOR")) {
           console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "addrole");
           let member2 = message.mentions.members.first();
-          if(!member2) return message.reply("You need to mention a user/member!");
+          if(!member2) return message.reply(":x: " + "| You need to mention a user/member!");
           let muteRole2 = message.guild.roles.find("name", args[2]);
-          if(!muteRole2) return message.reply("There is no such thing as a \"Muted\" role!");
+          if(!muteRole2) return message.reply(":x: " + "| There is no such thing as a \"Muted\" role!");
           let time2 = args[3];
           if(!time2) {
             member2.addRole(muteRole2.id);
@@ -440,7 +448,7 @@ bot.on("message", function(message){
             };
             }else {
               console.log(`${message.author.username}` + " " + "Was Denied Use of the command " + prefix + "addrole");
-              return message.reply("Your need to have the \"ADMINISTRATOR\" Permission")
+              return message.reply(":x: " + "| You need to have the \"ADMINISTRATOR\" Permission")
             };
           break;
 
@@ -448,16 +456,16 @@ bot.on("message", function(message){
           if(message.member.hasPermission("ADMINISTRATOR")) {
             console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "removerole");
             let member3 = message.mentions.members.first();
-            if(!member3) return message.reply("You need to mention a user/member!");
+            if(!member3) return message.reply(":x: " + "| You need to mention a user/member!");
             let muteRole3 = message.guild.roles.find("name", args[2]);
-            if(!muteRole3) return message.reply("There is no such thing as a \"Muted\" role!");
+            if(!muteRole3) return message.reply(":x: " + "| There is no such thing as a \"Muted\" role!");
 
             member3.removeRole(muteRole3.id);
             message.channel.send(member3 + ` you have lost the role: ` + args[2] + `!`);
 
             }else {
               console.log(`${message.author.username}` + " " + "Was Denied Use of the command " + prefix + "removerole");
-              return message.reply("Your need to have the \"ADMINISTRATOR\" Permission")
+              return message.reply(":x: " + "| You need to have the \"ADMINISTRATOR\" Permission")
             };
             break;
       case "dev":
@@ -466,7 +474,7 @@ bot.on("message", function(message){
           message.channel.send("this is working Mr Developer!");
         } else {
           console.log(`${message.author.username}` + " " + "Was Denied Use of the command " + prefix + "dev");
-          return message.reply("Your need to have the \"ADMINISTRATOR\" Permission")
+          return message.reply(":x: " + "| You need to have the \"ADMINISTRATOR\" Permission")
         }
 
           break;
@@ -476,12 +484,12 @@ bot.on("message", function(message){
           console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "rename");
 
           if(!args.slice(1).join(" ")){
-            return message.channel.send("Please enter a new name for the bot");
+            return message.channel.send(":x: " + "| Please enter a new name for the bot");
           }
           message.guild.member(bot.user).setNickname(args.slice(1).join(" ")).then(user => message.channel.send("My New NickName is " + args.slice(1).join(" ") + "!")).catch(console.error);
         } else {
           console.log(`${message.author.username}` + " " + "Was Denied Use of the command " + prefix + "rename");
-          return message.reply("Your need to have the \"ADMINISTRATOR\" Permission")
+          return message.reply(":x: " + "| You need to have the \"ADMINISTRATOR\" Permission")
         }
 
           break;
@@ -494,10 +502,10 @@ bot.on("message", function(message){
       case "8ball":
           console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "8ball");
           if(!args[1]){
-            return message.channel.send("Please Enter A Question You Would Like Answered")
+            return message.channel.send(":x: " + "| Please Enter A Question You Would Like Answered")
           }
           if (args[1]) message.channel.send(fortunes[Math.floor(Math.random() * fortunes.length)]);
-          else message.channel.send("I Wasnt Able To Read That :(");
+          else message.channel.send(":x: " + "| I Wasnt Able To Read That :(");
           break;
 
       case "embed":
@@ -519,17 +527,17 @@ bot.on("message", function(message){
 
       case "kick":
           if(!message.member.hasPermission("ADMINISTRATOR")){
-            return message.reply("You Need The \"ADMIN\" role to kick people").catch(console.error);
+            return message.reply(":x: " + "| You Need The \"ADMIN\" role to kick people").catch(console.error);
           }
           if (message.mentions.users.size === 0){
-            return message.reply("Please Mention A User To Kick Next Time").catch(console.error);
+            return message.reply(":x: " + "| Please Mention A User To Kick Next Time").catch(console.error);
           }
           let kickmember = message.guild.member(message.mentions.users.first());
           if(!kickmember){
-            message.reply("That User Does Not Seem Valid!");
+            message.reply(":x: " + "| That User Does Not Seem Valid!");
           }
           if(!message.guild.member(bot.user).hasPermission("KICK_MEMBERS")){
-            return message.reply(" i need the \"KICK_MEMBERS\" permission!").catch(console.error);
+            return message.reply(":x: " + "| i need the \"KICK_MEMBERS\" permission!").catch(console.error);
           }
           kickmember.kick().then(member => {
             message.reply(`${member.user.username} was succesfully kicked`).catch(console.error);
@@ -541,7 +549,7 @@ bot.on("message", function(message){
         console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "highlight");
 
         if(!args.slice(1).join(" ")){
-          return message.channel.send("Please Enter Something For The Bot To Highligh With Syntax")
+          return message.channel.send(":x: " + "| Please Enter Something For The Bot To Highligh With Syntax")
         }
         message.channel.send("```" + args.slice(1).join(" ") + "```");
         break;
@@ -551,7 +559,7 @@ bot.on("message", function(message){
           console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "speak");
 
           if(!args.slice(1).join(" ")){
-            return message.channel.send("Please Enter Something For The Bot To Say")
+            return message.channel.send(":x: " + "| Please Enter Something For The Bot To Say")
           }
           message.channel.send(args.slice(1).join(" "));
         break;
@@ -560,12 +568,12 @@ bot.on("message", function(message){
           console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "play");
 
           if (!args[1]){
-              message.channel.send("Please Provide A Link (YouTube link)");
+              message.channel.send(":x: " + "| Please Provide A Link (YouTube link)");
               return;
           }
 
           if (!message.member.voiceChannel){
-              message.channel.send("You Must Be In A Voice Channel!");
+              message.channel.send(":x: " + "| You Must Be In A Voice Channel!");
               return;
           }
 
@@ -580,10 +588,15 @@ bot.on("message", function(message){
           var found = ytlink.match(re);
 
           if(found == null){
-            message.channel.send("Please Enter A YouTube Link!");
+            message.channel.send(":x: " + "| Please Enter A YouTube Link!");
           }else{
             server.queue.push(found[0]);
             if (!message.guild.voiceConnection) message.member.voiceChannel.join().then(function(connection){
+
+              var server = servers[message.guild.id];
+              var song = server.queue.length;
+
+              message.channel.send(":white_check_mark: " + "| Added " + song + " song to the queue!");
                 play(connection, message);
              });
           }
@@ -636,16 +649,16 @@ bot.on("message", function(message){
               console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "play");
 
               if (!message.member.voiceChannel){
-                  message.channel.send("You Must Be In A Voice Channel!");
+                  message.channel.send(":x: " + "| You Must Be In A Voice Channel!");
                   return;
               }
 
               if(!args[1]){
-                return message.channel.send("Please Enter a YouTube Playlist Url");
+                return message.channel.send(":x: " + "| Please Enter a YouTube Playlist Url");
               }
 
               if(args[1].indexOf("youtube.com") == -1){
-                return message.channel.send("Invalid Youtube Playlist Link!!");
+                return message.channel.send(":x: " + "| Invalid Youtube Playlist Link!!");
               }
 
               var ytlink = args[1];
@@ -654,7 +667,7 @@ bot.on("message", function(message){
               var found = ytlink.match(re);
 
               if(found == null)
-                  return message.channel.send("Please Enter A YouTube Playlist Link!");
+                  return message.channel.send(":x: " + "| Please Enter A YouTube Playlist Link!");
 
               PLAYID = found[0].substring(found[0].lastIndexOf("list=") + 5 );
 
@@ -674,6 +687,10 @@ bot.on("message", function(message){
               });
 
               if (!message.guild.voiceConnection) message.member.voiceChannel.join().then(function(connection){
+                  var server = servers[message.guild.id];
+                  var songs = server.queue.length;
+
+                  message.channel.send(":white_check_mark: " + "| Added " + songs + " songs to the queue!");
                   play(connection, message);
                });
 
@@ -687,20 +704,12 @@ bot.on("message", function(message){
             if (server.dispatcher) {
               server.dispatcher.end();
             }else{
-              return message.channel.send("Cannot Do that!");
+              return message.channel.send(":x: " + "| Cannot Do that!");
             }
           } catch(e) {
             NOW_PLAYING = "Nothing";
-            return message.channel.send("Noting To skip my man");
+            return message.channel.send(":x: " + "| Noting To skip my man");
           }
-
-          // if(!servers[message.guild.id]) servers[message.guild.id] = {
-          //    queue: []
-          // };
-          //
-          // if(server.queue.length == 0){
-          //
-          // }
 
           break;
 
@@ -838,12 +847,12 @@ bot.on("message", function(message){
           console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "clear");
           let messagecount = parseInt(args[1]);
 
-          if(isNaN(messagecount)) return message.channel.send("Please Enter A Numeric Value!");
+          if(isNaN(messagecount)) return message.channel.send(":x: " + "| Please Enter A Numeric Value!");
 
           if(messagecount > 100){
-            message.channel.send("Sorry, You can only clean upto 100 messages at a time!")
+            message.channel.send(":x: " + "| Sorry, You can only clean upto 100 messages at a time!")
           }else if(messagecount < 2 ) {
-            message.channel.send("Sorry, You can only clean upto 100 messages at a time!")
+            message.channel.send(":x: " + "| Sorry, You can only clean upto 100 messages at a time!")
           } else {
 
           }{
@@ -851,7 +860,7 @@ bot.on("message", function(message){
           }
         } else {
           console.log(`${message.author.username}` + " " + "Was Denied Use of the command " + prefix + "clean");
-          return message.reply("Your need to have the \"ADMINISTRATOR\" Permission")
+          return message.reply(":x: " + "| You need to have the \"ADMINISTRATOR\" Permission")
         }
 
           break;
