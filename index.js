@@ -253,6 +253,18 @@ bot.on("message", function(message){
           message.channel.send(message.author.toString() + " " + "Pong!");
           break;
 
+      case "pause":
+        var server = servers[message.guild.id];
+        server.dispatcher.pause();
+
+        break;
+
+      case "resume":
+        var server = servers[message.guild.id];
+        server.dispatcher.resume();
+
+        break;
+
           case "fuckoff":
               console.log(`${message.author.username}` + " " + "Used The Command " + prefix + "fuckoff");
               var server = servers[message.guild.id];
@@ -798,12 +810,14 @@ bot.on("message", function(message){
                                                "Type " + "__**" + prefix + "notice**__ to get noticed by the bot \n" +
                                                "Type " + "__**" + prefix + "play [YOUTUBE URL]**__ to play a song from YouTube \n" +
                                                "Type " + "__**" + prefix + "playlist [YOUTUBE PLAYLIST URL]**__ to play a playlist from YouTube \n" +
+                                               "Type " + "__**" + prefix + "pause**__ to pause the currently playing song \n" +
                                                "----------------------------------------------------------------------------------------------\n", true)
 
                   .setColor("0x00FF00")
 
                   var comm2 = new Discord.RichEmbed()
                           .addField("Commands (2/3):", "----------------------------------------------------------------------------------------------\n" +
+                                                       "Type " + "__**" + prefix + "resume**__ to continue the currently paused song \n" +
                                                        "Type " + "__**" + prefix + "skip**__ to play the next song in the queue \n" +
                                                        "Type " + "__**" + prefix + "stop**__ to stop the currently playing song \n" +
                                                        "Type " + "__**" + prefix + "crosshair**__ to get the Developers CS:GO Crosshair\n" +
