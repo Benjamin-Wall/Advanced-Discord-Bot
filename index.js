@@ -258,7 +258,7 @@ bot.on("message", function(message){
           break;
 
       case "fortnite":
-
+      
       fortnite(args[1], args[2]).then((data) => {
         var STAT = new Discord.RichEmbed()
         .setTitle("__***Fortnite Stats***__")
