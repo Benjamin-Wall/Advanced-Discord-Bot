@@ -5,6 +5,7 @@ var YTDL = require('ytdl-core');
 const chalk = require('chalk');
 var colors = require('colors');
 var ytdl = require('youtube-dl')
+const fortnite = require('fortnite');
 
 var findYoutubeUrls = require('find-youtube-urls');
 const SteamTotp = require('steam-totp');
@@ -26,7 +27,7 @@ var SammyCode = SteamTotp.getAuthCode(configS.sharedSecret);
 var settings = './settingsConfig/settings.json';
 var file = require(settings)
 
-require('console-stamp')(console, '[HH:MM:ss]');
+// require('console-stamp')(console, '[HH:MM:ss]');
 
 const TOKEN = file.TOKEN;
 const GreenStyle = chalk.green;
@@ -217,8 +218,11 @@ bot.on("ready", function(){
 
   bot.user.setGame("MENTION 4 PREFX");
 
-});
+  // fortnite('JimiB95', 'pc').then((data) => {
 
+  // });
+
+});
 bot.on("message", function(message){
     if (message.author.equals(bot.user)) return;
 
@@ -253,6 +257,71 @@ bot.on("message", function(message){
           message.channel.send(message.author.toString() + " " + "Pong!");
           break;
 
+      case "fortnite":
+
+      fortnite(args[1], args[2]).then((data) => {
+        var STAT = new Discord.RichEmbed()
+        .setTitle("__***Fortnite Stats***__")
+        .setURL(data.info.url)
+
+        .addField("Info:", "-----------------------------------\n" +
+                           "Account ID: " + data.info.accountId + "\n" +
+                           "Account Username: " + data.info.username + "\n" +
+                           "Account Platform: " + data.info.platform + "\n" +
+                           "\n" +
+                           "---------------TOTAL----------------\n" +
+                           data.lifetimeStats[0].stat + ": " + data.lifetimeStats[0].value + "\n" +
+                           data.lifetimeStats[1].stat + ": " + data.lifetimeStats[1].value + "\n" +
+                           data.lifetimeStats[2].stat + ": " + data.lifetimeStats[2].value + "\n" +
+                           data.lifetimeStats[3].stat + ": " + data.lifetimeStats[3].value + "\n" +
+                           data.lifetimeStats[4].stat + ": " + data.lifetimeStats[4].value + "\n" +
+                           data.lifetimeStats[5].stat + ": " + data.lifetimeStats[5].value + "\n" +
+                           data.lifetimeStats[6].stat + ": " + data.lifetimeStats[6].value + "\n" +
+                           data.lifetimeStats[7].stat + ": " + data.lifetimeStats[7].value + "\n" +
+                           data.lifetimeStats[10].stat + ": " + data.lifetimeStats[10].value + "\n" +
+                           "\n" +
+                           "--------------SOLO-----------------\n" +
+                           data.group.solo[0].stat + ": " + data.group.solo[0].value + "\n" +
+                           data.group.solo[1].stat + ": " + data.group.solo[1].value + "\n" +
+                           data.group.solo[2].stat + ": " + data.group.solo[2].value + "\n" +
+                           data.group.solo[3].stat + ": " + data.group.solo[3].value + "\n" +
+                           data.group.solo[4].stat + ": " + data.group.solo[4].value + "\n" +
+                           data.group.solo[5].stat + ": " + data.group.solo[5].value + "\n" +
+                           data.group.solo[6].stat + ": " + data.group.solo[6].value + "\n" +
+                           data.group.solo[7].stat + ": " + data.group.solo[7].value + "\n" +
+                           data.group.solo[8].stat + ": " + data.group.solo[8].value + "\n" +
+                           data.group.solo[9].stat + ": " + data.group.solo[9].value + "\n" +
+                           data.group.solo[10].stat + ": " + data.group.solo[10].value + "\n" +
+                           data.group.solo[11].stat + ": " + data.group.solo[11].value + "\n" +
+                           "\n" +
+                           "--------------DUO-----------------\n" +
+                           data.group.duo[0].stat + ": " + data.group.duo[0].value + "\n" +
+                           data.group.duo[1].stat + ": " + data.group.duo[1].value + "\n" +
+                           data.group.duo[2].stat + ": " + data.group.duo[2].value + "\n" +
+                           data.group.duo[3].stat + ": " + data.group.duo[3].value + "\n" +
+                           data.group.duo[4].stat + ": " + data.group.duo[4].value + "\n" +
+                           data.group.duo[5].stat + ": " + data.group.duo[5].value + "\n" +
+                           data.group.duo[6].stat + ": " + data.group.duo[6].value + "\n" +
+                           data.group.duo[7].stat + ": " + data.group.duo[7].value + "\n" +
+                           data.group.duo[8].stat + ": " + data.group.duo[8].value + "\n" +
+                           data.group.duo[9].stat + ": " + data.group.duo[9].value + "\n" +
+                           data.group.duo[10].stat + ": " + data.group.duo[10].value + "\n" +
+                           data.group.duo[11].stat + ": " + data.group.duo[11].value + "\n" +
+                           data.group.duo[12].stat + ": " + data.group.duo[12].value + "\n" +
+                           data.group.duo[13].stat + ": " + data.group.duo[13].value, true)
+
+        .addField("Requested By: ", message.author.username)
+
+        .setColor("0x#FF0000")
+
+        message.channel.send(STAT);
+
+      }).catch(function(err) {
+        message.channel.send(err);
+      })
+
+        break;
+
       case "pause":
         var server = servers[message.guild.id];
         server.dispatcher.pause();
@@ -277,8 +346,7 @@ bot.on("message", function(message){
              }
                 server.dispatcher.end();
                 NOW_PLAYING = "Nothing";
-                //console.log("[" + new Date().toLocaleString() + "] Stopped the queue.");
-            }﻿
+            }
               break;
 
       case "memes":
@@ -411,8 +479,6 @@ bot.on("message", function(message){
             file.prefix[message.guild.id] = prefix_val;
 
             fs.writeFile(settings, JSON.stringify(file, null, 2), function (err) {
-              //var test = fs.readFileSync("settings.json")
-              //settingsreal = JSON.parse(test)
 
               message.channel.send(":white_check_mark: " + "| The NEW Prefix for this bot is: " + prefix_val);
             });
@@ -616,8 +682,6 @@ bot.on("message", function(message){
              });
           }
 
-          // server.queue.push(found[0]);
-
           break;
 
           case "np":
@@ -740,8 +804,7 @@ bot.on("message", function(message){
          }
             server.dispatcher.end();
             NOW_PLAYING = "Nothing";
-            //console.log("[" + new Date().toLocaleString() + "] Stopped the queue.");
-        }﻿
+        }
           break;
 
        case "crosshair":
@@ -786,6 +849,11 @@ bot.on("message", function(message){
                                    "rename\n" +
                                    "clean\n" +
                                    "kick\n", true)
+
+               .addField("ADMIN:", "prefix\n" +
+                                  "rename\n" +
+                                  "clean\n" +
+                                  "kick\n", true)
 
               .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
               .setFooter("FOR MORE INFO TYPE " + prefix + "help [COMMAND] FOR MORE INFO ON THE COMMAND")
@@ -955,6 +1023,7 @@ bot.on("message", function(message){
 
       default:
     }
+
 });
 
 bot.on('messageReactionAdd', (reaction, user) => {
@@ -964,7 +1033,7 @@ bot.on('messageReactionAdd', (reaction, user) => {
     if(reaction.emoji.identifier == "viewmodel:358741579374264321"){
        reaction.remove(user).then(reaction => {
 
-       reaction.message.edit({tts: false, nonce: false, embed: view}); // edits message and replaces it
+       reaction.message.edit({tts: false, nonce: false, embed: view});
 
 	});
       }else{
@@ -997,22 +1066,5 @@ bot.on('messageReactionAdd', (reaction, user) => {
   });
 }
 });
-
-//waste basket = %F0%9F%97%91
-//1 = 1%E2%83%A3
-//2 = 2%E2%83%A3
-//3 = 3%E2%83%A3
-//4 = 4%E2%83%A3
-//5 = 5%E2%83%A3
-//6 = 6%E2%83%A3
-//7 = 7%E2%83%A3
-//8 = 8%E2%83%A3
-//9 = 9%E2%83%A3
-//Question Mark = %E2%9D%93
-//arrow pointing left = %E2%AC%85
-//arrow pointing right = %E2%9E%A1
-//empty 1 = Empty1:361992629778382848
-//empty 2 = Empty2:361992765044817960
-//empty 3 = Empty3:361992789833023489
 
 bot.login(TOKEN);
