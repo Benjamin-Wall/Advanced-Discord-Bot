@@ -868,6 +868,7 @@ bot.on("message", function(message){
 
           var comm1 = new Discord.RichEmbed()
                   .addField("Commands (1/3):", "----------------------------------------------------------------------------------------------\n" +
+                                               "Type " + "__**" + prefix + "fortnite [USERNAME] [pc/xbl/psn]**__ show stats of requested player\n" +
                                                "Type " + "__**" + prefix + "speak [ANYTHING]**__ to show text entered as the bot\n" +
                                                "Type " + "__**" + prefix + "coin**__ to flip a coin to get heads or tails \n" +
                                                "Type " + "__**" + prefix + "8ball [QUESTION]**__ to get a random answer \n" +
