@@ -264,53 +264,20 @@ bot.on("message", function(message){
         .setTitle("__***Fortnite Stats***__")
         .setURL(data.info.url)
 
-        .addField("Info:", "-----------------------------------\n" +
-                           "Account ID: " + data.info.accountId + "\n" +
-                           "Account Username: " + data.info.username + "\n" +
-                           "Account Platform: " + data.info.platform + "\n" +
-                           "\n" +
-                           "---------------TOTAL----------------\n" +
-                           data.lifetimeStats[0].stat + ": " + data.lifetimeStats[0].value + "\n" +
-                           data.lifetimeStats[1].stat + ": " + data.lifetimeStats[1].value + "\n" +
-                           data.lifetimeStats[2].stat + ": " + data.lifetimeStats[2].value + "\n" +
-                           data.lifetimeStats[3].stat + ": " + data.lifetimeStats[3].value + "\n" +
-                           data.lifetimeStats[4].stat + ": " + data.lifetimeStats[4].value + "\n" +
-                           data.lifetimeStats[5].stat + ": " + data.lifetimeStats[5].value + "\n" +
-                           data.lifetimeStats[6].stat + ": " + data.lifetimeStats[6].value + "\n" +
-                           data.lifetimeStats[7].stat + ": " + data.lifetimeStats[7].value + "\n" +
-                           data.lifetimeStats[10].stat + ": " + data.lifetimeStats[10].value + "\n" +
-                           "\n" +
-                           "--------------SOLO-----------------\n" +
-                           data.group.solo[0].stat + ": " + data.group.solo[0].value + "\n" +
-                           data.group.solo[1].stat + ": " + data.group.solo[1].value + "\n" +
-                           data.group.solo[2].stat + ": " + data.group.solo[2].value + "\n" +
-                           data.group.solo[3].stat + ": " + data.group.solo[3].value + "\n" +
-                           data.group.solo[4].stat + ": " + data.group.solo[4].value + "\n" +
-                           data.group.solo[5].stat + ": " + data.group.solo[5].value + "\n" +
-                           data.group.solo[6].stat + ": " + data.group.solo[6].value + "\n" +
-                           data.group.solo[7].stat + ": " + data.group.solo[7].value + "\n" +
-                           data.group.solo[8].stat + ": " + data.group.solo[8].value + "\n" +
-                           data.group.solo[9].stat + ": " + data.group.solo[9].value + "\n" +
-                           data.group.solo[10].stat + ": " + data.group.solo[10].value + "\n" +
-                           data.group.solo[11].stat + ": " + data.group.solo[11].value + "\n" +
-                           "\n" +
-                           "--------------DUO-----------------\n" +
-                           data.group.duo[0].stat + ": " + data.group.duo[0].value + "\n" +
-                           data.group.duo[1].stat + ": " + data.group.duo[1].value + "\n" +
-                           data.group.duo[2].stat + ": " + data.group.duo[2].value + "\n" +
-                           data.group.duo[3].stat + ": " + data.group.duo[3].value + "\n" +
-                           data.group.duo[4].stat + ": " + data.group.duo[4].value + "\n" +
-                           data.group.duo[5].stat + ": " + data.group.duo[5].value + "\n" +
-                           data.group.duo[6].stat + ": " + data.group.duo[6].value + "\n" +
-                           data.group.duo[7].stat + ": " + data.group.duo[7].value + "\n" +
-                           data.group.duo[8].stat + ": " + data.group.duo[8].value + "\n" +
-                           data.group.duo[9].stat + ": " + data.group.duo[9].value + "\n" +
-                           data.group.duo[10].stat + ": " + data.group.duo[10].value + "\n" +
-                           data.group.duo[11].stat + ": " + data.group.duo[11].value + "\n" +
-                           data.group.duo[12].stat + ": " + data.group.duo[12].value + "\n" +
-                           data.group.duo[13].stat + ": " + data.group.duo[13].value, true)
-
-        .addField("Requested By: ", message.author.username)
+        .addField("------------------------------------", 
+                           "Account Username: " + "__**" + data.info.username + "**__" + "\n" +
+                           "Account Platform: " + "__**" + data.info.platform + "**__" + "\n" +
+                           "------------------------------------\n" +
+                           "Total Kills: " + "__**" + data.lifetimeStats[10].value + "**__" + "\n" +
+                           "Total Wins: " + "__**" + data.lifetimeStats[7].value + "**__" + "\n" +
+                           "Total Top 3: " + "__**" + data.lifetimeStats[2].value + "**__" + "\n" +
+                           "Total Top 5: " + "__**" + data.lifetimeStats[1].value + "**__" + "\n" +
+                           "Total Top 6: " + "__**" + data.lifetimeStats[3].value + "**__" + "\n" +
+                           "Total Top 10: " + "__**" + data.lifetimeStats[0].value + "**__" + "\n" +
+                           "Total Top 12: " + "__**" + data.lifetimeStats[4].value + "**__" + "\n" +
+                           "Total Top 25: " + "__**" + data.lifetimeStats[5].value + "**__" + "\n" +
+                           "Total Matches Played: " + "__**" + data.lifetimeStats[6].value + "**__" + "\n" +
+                           "------------------------------------\n", true)
 
         .setColor("0x#FF0000")
 
