@@ -65,3 +65,36 @@
 // console.log(data.group.duo[11].stat + ": " + data.group.duo[11].value); //time played
 // console.log(data.group.duo[12].stat + ": " + data.group.duo[12].value); //kills per min
 // console.log(data.group.duo[13].stat + ": " + data.group.duo[13].value); //kills per match
+
+
+// "\n" +
+// "--------------SOLO-----------------\n" +
+// data.group.solo[0].stat + ": " + data.group.solo[0].value + "\n" +
+// data.group.solo[1].stat + ": " + data.group.solo[1].value + "\n" +
+// data.group.solo[2].stat + ": " + data.group.solo[2].value + "\n" +
+// data.group.solo[3].stat + ": " + data.group.solo[3].value + "\n" +
+// data.group.solo[4].stat + ": " + data.group.solo[4].value + "\n" +
+// data.group.solo[5].stat + ": " + data.group.solo[5].value + "\n" +
+// data.group.solo[6].stat + ": " + data.group.solo[6].value + "\n" +
+// data.group.solo[7].stat + ": " + data.group.solo[7].value + "\n" +
+// data.group.solo[8].stat + ": " + data.group.solo[8].value + "\n" +
+// data.group.solo[9].stat + ": " + data.group.solo[9].value + "\n" +
+// data.group.solo[10].stat + ": " + data.group.solo[10].value + "\n" +
+// data.group.solo[11].stat + ": " + data.group.solo[11].value + "\n" +
+// "\n" +
+// "--------------DUO-----------------\n" +
+// data.group.duo[0].stat + ": " + data.group.duo[0].value + "\n" +
+// data.group.duo[1].stat + ": " + data.group.duo[1].value + "\n" +
+// data.group.duo[2].stat + ": " + data.group.duo[2].value + "\n" +
+// data.group.duo[3].stat + ": " + data.group.duo[3].value + "\n" +
+// data.group.duo[4].stat + ": " + data.group.duo[4].value + "\n" +
+// data.group.duo[5].stat + ": " + data.group.duo[5].value + "\n" +
+// data.group.duo[6].stat + ": " + data.group.duo[6].value + "\n" +
+// data.group.duo[7].stat + ": " + data.group.duo[7].value + "\n" +
+// data.group.duo[8].stat + ": " + data.group.duo[8].value + "\n" +
+// data.group.duo[9].stat + ": " + data.group.duo[9].value + "\n" +
+// data.group.duo[10].stat + ": " + data.group.duo[10].value + "\n" +
+// data.group.duo[11].stat + ": " + data.group.duo[11].value + "\n" +
+// data.group.duo[12].stat + ": " + data.group.duo[12].value + "\n" +
+// data.group.duo[13].stat + ": " + data.group.duo[13].value, true)
+//"ID: " + data.info.accountId + "\n" +
