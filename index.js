@@ -5,7 +5,6 @@ const Discord = require('discord.js');
 const fortnite = require('fortnite');
 var getJSON = require('get-json');
 var memes = require('dankmemes');
-var ytdl = require('youtube-dl');
 var YTDL = require('ytdl-core');
 const chalk = require('chalk');
 var path = require('path');
