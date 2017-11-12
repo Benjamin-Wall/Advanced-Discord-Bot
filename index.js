@@ -10,6 +10,8 @@ const chalk = require('chalk');
 var path = require('path');
 const ms = require('ms');
 var fs = require('fs');
+var request = require('request');
+var cheerio = require('cheerio');
 
 const configS = require('./settingsConfig/ConfigSammy.json');
 const configJ = require('./settingsConfig/ConfigJack.json');
@@ -123,6 +125,24 @@ var role = new Discord.RichEmbed()
 
         .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
 
+function getStatData(location, message , $){
+
+  var selector = $('.stats-stat .value').eq(location).text();
+
+  var stat_array = $.parseHTML(selector);
+
+  var stat = 0;
+
+  if(stat_array == null || stat_array.lengh == 0){
+    message.channel.send("Invalid User");
+    return " ";
+  }else{
+    stat = stat_array[0].data;
+  }
+
+  return stat;
+}
+
 function play(connection, message){
     var server = servers[message.guild.id];
 
@@ -213,10 +233,6 @@ bot.on("ready", function(){
 
   bot.user.setGame("MENTION 4 PREFX");
 
-  // fortnite('JimiB95', 'pc').then((data) => {
-
-  // });
-
 });
 bot.on("message", function(message){
     if (message.author.equals(bot.user)) return;
@@ -253,13 +269,13 @@ bot.on("message", function(message){
           break;
 
       case "fortnite":
-      
+
       fortnite(args[1], args[2]).then((data) => {
         var STAT = new Discord.RichEmbed()
         .setTitle("__***Fortnite Stats***__")
         .setURL(data.info.url)
 
-        .addField("------------------------------------", 
+        .addField("------------------------------------",
                            "Account Username: " + "__**" + data.info.username + "**__" + "\n" +
                            "Account Platform: " + "__**" + data.info.platform + "**__" + "\n" +
                            "------------------------------------\n" +
@@ -465,6 +481,87 @@ bot.on("message", function(message){
             message.channel.send(message.author.toString() + ` The Timer Has FINISHED!, it lasted: ${ms(ms(Timer), {long: true})}`)
 
           }, ms(Timer));
+          break;
+
+        case "csgo":
+
+        var UR_L = "http://csgo.tracker.network/profile/" + args[1];
+
+        if(!args[1]){
+          return message.channel.send("Please Enter a valid STEAMID64 or custom url");
+        }
+
+        request(UR_L, function(err, resp, body){
+
+            $ = cheerio.load(body);
+
+            var KD = getStatData(0, message, $);
+            var WIN = getStatData(1, message, $);
+            var HS = getStatData(4, message, $);
+            var MONEY = getStatData(5, message, $);
+            var SCORE = getStatData(6, message, $);
+            var KILLS = getStatData(7, message, $);
+            var DEATHS = getStatData(8, message, $);
+            var MVP = getStatData(9, message, $);
+            var BS = getStatData(13, message, $);
+            var BD = getStatData(14, message, $);
+            var HR = getStatData(15, message, $);
+
+            var STAT = new Discord.RichEmbed()
+
+            .setTitle("__***CSGO Stats***__")
+            .setURL(UR_L)
+
+            .addField("------------------------------------",
+                      "Total KD: " + "__**" + KD + "**__" + "\n" +
+                      "Total Win%: " + "__**" + WIN + "**__" + "\n" +
+                      "Total MVPs: " + "__**" + MVP + "**__" + "\n" +
+                      "Total Score: " + "__**" + SCORE + "**__" + "\n" +
+                      "Total Kills: " + "__**" + KILLS + "**__" + "\n" +
+                      "Total Deaths: " + "__**" + DEATHS + "**__" + "\n" +
+                      "Total Bombs Set: " + "__**" + BS + "**__" + "\n" +
+                      "Total Bombs Defused: " + "__**" + BD + "**__" + "\n" +
+                      "Total Headshots: " + "__**" + HS + "**__" + "\n" +
+                      "Total Money Earned: " + "__**" + MONEY + "**__" + "\n" +
+                      "Total Hostages Rescued: " + "__**" + HR + "**__" + "\n" +
+                      "------------------------------------\n", true)
+
+              .setColor("0x#FF0000")
+            message.channel.send(STAT);
+
+                        // var KD = $('.stats-stat .value').eq(0).text();
+            //   KD = $.parseHTML(KD)[0].data;
+
+            // var WIN = $('.stats-stat .value').eq(1).text();
+            //   WIN = $.parseHTML(WIN)[0].data;
+
+            // var HS = $('.stats-stat .value').eq(4).text();
+            //   HS = $.parseHTML(HS)[0].data;
+
+            // var MONEY = $('.stats-stat .value').eq(5).text();
+            //   MONEY = $.parseHTML(MONEY)[0].data;
+
+            // var SCORE = $('.stats-stat .value').eq(6).text();
+            //   SCORE = $.parseHTML(SCORE)[0].data;
+
+            // var KILLS = $('.stats-stat .value').eq(7).text();
+            //   KILLS = $.parseHTML(KILLS)[0].data;
+
+            // var DEATHS = $('.stats-stat .value').eq(8).text();
+            //   DEATHS = $.parseHTML(DEATHS)[0].data;
+
+            // var MVP = $('.stats-stat .value').eq(9).text();
+            //   MVP = $.parseHTML(MVP)[0].data;
+
+            // var BS = $('.stats-stat .value').eq(13).text();
+            //   BS = $.parseHTML(BS)[0].data;
+
+            // var BD = $('.stats-stat .value').eq(14).text();
+            //   BD = $.parseHTML(BD)[0].data;
+
+            // var HR = $('.stats-stat .value').eq(15).text();
+            //   HR = $.parseHTML(HR)[0].data;
+          })
           break;
 
         case "addrole":
@@ -830,6 +927,7 @@ bot.on("message", function(message){
 
           var comm1 = new Discord.RichEmbed()
                   .addField("Commands (1/3):", "----------------------------------------------------------------------------------------------\n" +
+                                               "Type " + "__**" + prefix + "ping**__ to get a simple pong response\n" +
                                                "Type " + "__**" + prefix + "fortnite [USERNAME] [pc/xbl/psn]**__ show stats of requested player\n" +
                                                "Type " + "__**" + prefix + "speak [ANYTHING]**__ to show text entered as the bot\n" +
                                                "Type " + "__**" + prefix + "coin**__ to flip a coin to get heads or tails \n" +
@@ -837,11 +935,11 @@ bot.on("message", function(message){
                                                "Type " + "__**" + prefix + "embed**__ to show a test version of a embed \n" +
                                                "Type " + "__**" + prefix + "highlight [ANYTHING]**__ to show text entered with black background \n" +
                                                "Type " + "__**" + prefix + "timer [1s/1m/1h]**__ to start a timer with the given amount of time \n" +
-                                               "Type " + "__**" + prefix + "invite**__ to get the perminent invite link for the server\n" +
                                                "Type " + "__**" + prefix + "notice**__ to get noticed by the bot \n" +
                                                "Type " + "__**" + prefix + "play [YOUTUBE URL]**__ to play a song from YouTube \n" +
                                                "Type " + "__**" + prefix + "playlist [YOUTUBE PLAYLIST URL]**__ to play a playlist from YouTube \n" +
                                                "Type " + "__**" + prefix + "pause**__ to pause the currently playing song \n" +
+                                               "Type " + "__**" + prefix + "test**__ to get another embed type \n" +
                                                "----------------------------------------------------------------------------------------------\n", true)
 
                   .setColor("0x00FF00")
@@ -859,12 +957,23 @@ bot.on("message", function(message){
                                                        "Type " + "__**" + prefix + "memes**__ to get a random meme from reddit\n" +
                                                        "Type " + "__**" + prefix + "float [INSPECT URL]**__ to get the float of the given inspect link\n" +
                                                        "Type " + "__**" + prefix + "np**__ to get the currently playing song\n" +
+                                                       "Type " + "__**" + prefix + "csgo [STEAMID64/CUSTOM URL NAME]**__ show stats of requested player\n" +
+                                                       "Type " + "__**" + prefix + "rules**__ to show the rules of the server\n" +
+                                                       "----------------------------------------------------------------------------------------------\n", true)
+
+                          .setColor("0x00FF00")
+
+                  var comm2 = new Discord.RichEmbed()
+                          .addField("Commands (3/4):", "----------------------------------------------------------------------------------------------\n" +
+                                                       "Type " + "__**" + prefix + "roles**__ to see all the roles in the server \n" +
+                                                       "Type " + "__**" + prefix + "help**__ to show the main help page \n" +
+                                                       "Type " + "__**" + prefix + "commands**__ to see all the commands for this bot in the server \n" +
                                                        "----------------------------------------------------------------------------------------------\n", true)
 
                           .setColor("0x00FF00")
 
           var comm3 = new Discord.RichEmbed()
-                  .addField("Admin Commands (3/3):", "----------------------------------------------------------------------------------------------\n" +
+                  .addField("Admin Commands (4/4):", "----------------------------------------------------------------------------------------------\n" +
                                                      "Type " + "__**" +  prefix + "dev**__ to get test if the bots working \n" +
                                                      "Type " + "__**" +  prefix + "prefix [NEW PREFIX]**__ to change old prefix \n" +
                                                      "Type " + "__**" +  prefix + "rename [NAME]**__ to rename to bot \n" +

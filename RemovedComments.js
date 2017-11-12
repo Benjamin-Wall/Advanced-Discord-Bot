@@ -97,4 +97,23 @@
 // data.group.duo[11].stat + ": " + data.group.duo[11].value + "\n" +
 // data.group.duo[12].stat + ": " + data.group.duo[12].value + "\n" +
 // data.group.duo[13].stat + ": " + data.group.duo[13].value, true)
+
 //"ID: " + data.info.accountId + "\n" +
+
+// console.log("GAMES: " + GAMES);
+// console.log("ROUNDS PLAYED: " + RP);
+// console.log("ROUNDS WON: " + RW);
+// console.log("WINS " + WINS);
+//console.log("TIME PLAYED: " + TP);
+
+// console.log("KD: " + KD);
+// console.log("WIN%: " + WIN);
+// console.log("MVPS: " + MVP);
+// console.log("SCORE: " + SCORE);
+// console.log("KILLS: " + KILLS);
+// console.log("DEATHS: " + DEATHS);
+// console.log("BOMB SET: " + BS);
+// console.log("HEADSHOTS: " + HS);
+// console.log("BOMB DEFUSE: " + BD);
+// console.log("MONEY EARNED: " + MONEY);
+// console.log("HOSTAGE RESCUED: " + HR);

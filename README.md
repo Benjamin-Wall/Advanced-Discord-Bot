@@ -34,7 +34,8 @@ playlist [YOUTUBE URL ID] - Adds all the songs from the playlist to the queue
 np - To get the currently playing song
 pause - To pause the currently playing song
 resume - To resume the currently paused song
-fortnite [USERNAME] [pc/xbl/psn] - to get fortnite stats of the requested player 
+fortnite [USERNAME] [pc/xbl/psn] - to get fortnite stats of the requested player
+csgo [STEAMID64/CUSTOM STEAM URL] - to get certain csgo stats of the requested player
 ```
 
 ## Admin Commands:
